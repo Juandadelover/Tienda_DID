@@ -4,10 +4,19 @@
  * Checkout Page
  * Customer data form and order submission via WhatsApp
  * User Story 3: Checkout y WhatsApp
+ * 
+ * Features:
+ * - Real-time form validation with visual feedback
+ * - Animated checkout steps with progress indication
+ * - Order summary with smooth price animations
+ * - Business hours alert with conditional display
+ * - WhatsApp integration with loading state animation
+ * - Mobile-responsive layout with proper spacing
  */
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'motion/react';
 import { CheckoutForm, CheckoutFormData } from '@/components/checkout/CheckoutForm';
 import { OrderSummary } from '@/components/checkout/OrderSummary';
 import { WhatsAppButton } from '@/components/checkout/WhatsAppButton';
@@ -86,28 +95,43 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 py-8">
-      <div className="container mx-auto px-4 max-w-6xl">
-        {/* Page Header */}
-        <div className="mb-8">
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Page Header - Animated */}
+        <motion.div
+          className="mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
           <h1 className="text-3xl font-bold text-slate-900 mb-2">
             Finalizar pedido
           </h1>
           <p className="text-slate-600">
             Completa tus datos para enviar tu pedido por WhatsApp
           </p>
-        </div>
+        </motion.div>
 
         {/* Business Hours Alert */}
         {!isOpen && (
-          <div className="mb-6">
+          <motion.div
+            className="mb-6"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
             <HorarioAlert />
-          </div>
+          </motion.div>
         )}
 
         {/* Main Content Grid */}
         <div className="grid lg:grid-cols-2 gap-8">
-          {/* Left Column: Form */}
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          {/* Left Column: Form - Animated */}
+          <motion.div
+            className="bg-white rounded-lg shadow-sm p-6"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+          >
             <h2 className="text-xl font-semibold text-slate-900 mb-6">
               Datos del cliente
             </h2>
@@ -116,10 +140,15 @@ export default function CheckoutPage() {
               onSubmit={handleFormSubmit} 
               isLoading={isSending}
             />
-          </div>
+          </motion.div>
 
-          {/* Right Column: Order Summary & Submit */}
-          <div className="space-y-6">
+          {/* Right Column: Order Summary & Submit - Animated */}
+          <motion.div
+            className="space-y-6"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+          >
             {/* Order Summary */}
             <OrderSummary
               items={items}
@@ -128,16 +157,26 @@ export default function CheckoutPage() {
             />
 
             {/* WhatsApp Send Button */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
+            <motion.div
+              className="bg-white rounded-lg shadow-sm p-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
               <WhatsAppButton
                 onClick={handleWhatsAppSend}
                 disabled={!formData || isSending || items.length === 0}
                 isLoading={isSending}
               />
-            </div>
+            </motion.div>
 
             {/* Additional Info */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <motion.div
+              className="bg-blue-50 border border-blue-200 rounded-lg p-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
               <h3 className="text-sm font-semibold text-blue-900 mb-2">
                 ℹ️ ¿Cómo funciona?
               </h3>
@@ -148,19 +187,24 @@ export default function CheckoutPage() {
                 <li>4. Confirma y envía el mensaje a la tienda</li>
                 <li>5. Espera la confirmación de tu pedido</li>
               </ol>
-            </div>
+            </motion.div>
 
             {/* Back to Cart Link */}
-            <div className="text-center">
+            <motion.div
+              className="text-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+            >
               <button
                 onClick={() => router.push('/carrito')}
                 disabled={isSending}
-                className="text-emerald-600 hover:text-emerald-700 font-medium text-sm underline disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-emerald-600 hover:text-emerald-700 font-medium text-sm underline disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 ← Volver al carrito
               </button>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </div>
     </div>

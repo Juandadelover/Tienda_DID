@@ -16,6 +16,7 @@ export interface ModalProps {
   showCloseButton?: boolean;
   closeOnOverlayClick?: boolean;
   size?: 'sm' | 'md' | 'lg' | 'xl';
+  footer?: React.ReactNode;
 }
 
 export function Modal({
@@ -26,6 +27,7 @@ export function Modal({
   showCloseButton = true,
   closeOnOverlayClick = true,
   size = 'md',
+  footer,
 }: ModalProps) {
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -34,12 +36,12 @@ export function Modal({
     } else {
       document.body.style.overflow = 'unset';
     }
-    
+
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
-  
+
   // Handle Escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -47,13 +49,13 @@ export function Modal({
         onClose();
       }
     };
-    
+
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
-  
+
   if (!isOpen) return null;
-  
+
   // Size styles
   const sizeStyles = {
     sm: 'max-w-md',
@@ -61,13 +63,13 @@ export function Modal({
     lg: 'max-w-2xl',
     xl: 'max-w-4xl',
   };
-  
+
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (closeOnOverlayClick && e.target === e.currentTarget) {
       onClose();
     }
   };
-  
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn"
@@ -87,7 +89,7 @@ export function Modal({
                 {title}
               </h2>
             )}
-            
+
             {showCloseButton && (
               <button
                 onClick={onClose}
@@ -111,11 +113,18 @@ export function Modal({
             )}
           </div>
         )}
-        
+
         {/* Content */}
         <div className="px-6 py-4 overflow-y-auto flex-1">
           {children}
         </div>
+
+        {/* Footer */}
+        {footer && (
+          <div className="border-t border-gray-200">
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   );

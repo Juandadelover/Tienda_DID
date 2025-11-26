@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import { motion } from 'motion/react';
 import type { CartItem as CartItemType } from '@/types/cart';
 import { formatCurrency } from '@/lib/utils/formatters';
 import { Button } from '@/components/ui/Button';
@@ -14,6 +15,7 @@ interface CartItemProps {
 
 export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
 
   const handleIncrement = () => {
     onUpdateQuantity(item.quantity + 1);
@@ -28,17 +30,27 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
   };
 
   const handleRemove = () => {
-    onRemove();
-    setShowConfirmDelete(false);
+    // Iniciar animación de slide-out
+    setIsRemoving(true);
+    // Ejecutar callback después de que termine la animación (200ms)
+    setTimeout(() => {
+      onRemove();
+      setShowConfirmDelete(false);
+    }, 200);
   };
 
   const subtotal = item.price * item.quantity;
 
   return (
-    <div className="bg-white rounded-lg p-4 shadow-sm">
-      <div className="flex gap-4">
+    <motion.div
+      className="bg-white rounded-xl p-5 shadow-md hover:shadow-lg transition-shadow duration-300 border border-slate-200"
+      initial={{ opacity: 1, x: 0 }}
+      animate={isRemoving ? { opacity: 0, x: '100%' } : { opacity: 1, x: 0 }}
+      transition={{ duration: 0.2, ease: 'easeIn' }}
+      layout>
+      <div className="flex gap-5">
         {/* Product image */}
-        <div className="relative w-20 h-20 flex-shrink-0 bg-slate-100 rounded-md overflow-hidden">
+        <div className="relative w-24 h-24 flex-shrink-0 bg-gradient-to-br from-slate-50 to-slate-100 rounded-lg overflow-hidden border border-slate-200">
           {item.imageUrl ? (
             <Image
               src={item.imageUrl}
@@ -46,6 +58,9 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
               fill
               sizes="80px"
               className="object-cover"
+              onError={(e) => {
+                e.currentTarget.src = '/images/placeholder.svg';
+              }}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
@@ -68,92 +83,80 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
 
         {/* Product info */}
         <div className="flex-1 min-w-0">
-          <h3 className="font-semibold text-slate-900 truncate">
+          <h3 className="font-bold text-slate-900 truncate text-base">
             {item.productName}
           </h3>
           {item.variantName && (
-            <p className="text-sm text-slate-600 mt-0.5">
+            <p className="text-xs text-slate-500 mt-1 bg-slate-100 inline-block px-2 py-1 rounded">
               {item.variantName}
             </p>
           )}
-          <p className="text-sm text-emerald-600 font-semibold mt-1">
+          <p className="text-lg text-emerald-600 font-bold mt-2">
             {formatCurrency(item.price)}
-            {item.unitType === 'weight' && ' / kg'}
+            <span className="text-xs text-slate-600 font-normal">
+              {item.unitType === 'weight' ? ' / kg' : ''}
+            </span>
           </p>
         </div>
 
         {/* Quantity controls and remove button - desktop */}
         <div className="hidden sm:flex items-center gap-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3 bg-slate-100 rounded-lg p-1">
             <button
               onClick={handleDecrement}
-              className="w-8 h-8 flex items-center justify-center border border-slate-300 rounded-md hover:bg-slate-50 transition-colors"
+              className="w-9 h-9 flex items-center justify-center bg-white border border-slate-300 rounded-md hover:bg-slate-50 active:bg-slate-100 transition-colors font-bold text-slate-700"
               aria-label="Disminuir cantidad"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-              </svg>
+              −
             </button>
-            <span className="w-12 text-center font-semibold text-slate-900">
+            <span className="w-10 text-center font-bold text-slate-900 text-base">
               {item.quantity}
             </span>
             <button
               onClick={handleIncrement}
-              className="w-8 h-8 flex items-center justify-center border border-slate-300 rounded-md hover:bg-slate-50 transition-colors"
+              className="w-9 h-9 flex items-center justify-center bg-white border border-slate-300 rounded-md hover:bg-slate-50 active:bg-slate-100 transition-colors font-bold text-slate-700"
               aria-label="Aumentar cantidad"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
+              +
             </button>
           </div>
 
           <div className="text-right min-w-[80px]">
-            <p className="font-bold text-slate-900">
+            <p className="font-bold text-slate-900 text-lg">
               {formatCurrency(subtotal)}
             </p>
           </div>
 
           <button
             onClick={() => setShowConfirmDelete(true)}
-            className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors min-w-[44px] min-h-[44px]"
+            className="w-10 h-10 flex items-center justify-center text-red-600 hover:bg-red-50 rounded-lg transition-colors font-bold hover:text-red-700"
             aria-label="Eliminar producto"
+            title="Eliminar del carrito"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-              />
-            </svg>
+            🗑️
           </button>
         </div>
       </div>
 
       {/* Quantity controls - mobile */}
       <div className="sm:hidden mt-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3 bg-slate-100 rounded-lg p-1">
           <button
             onClick={handleDecrement}
-            className="w-10 h-10 flex items-center justify-center border border-slate-300 rounded-md hover:bg-slate-50 transition-colors"
+            className="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 rounded-md hover:bg-slate-50 transition-colors font-bold text-slate-700"
             aria-label="Disminuir cantidad"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
-            </svg>
+            −
           </button>
-          <span className="w-12 text-center font-semibold text-slate-900 text-lg">
+          <span className="w-12 text-center font-bold text-slate-900 text-lg">
             {item.quantity}
           </span>
           <button
             onClick={handleIncrement}
-            className="w-10 h-10 flex items-center justify-center border border-slate-300 rounded-md hover:bg-slate-50 transition-colors"
+            className="w-10 h-10 flex items-center justify-center bg-white border border-slate-300 rounded-md hover:bg-slate-50 transition-colors font-bold text-slate-700"
             aria-label="Aumentar cantidad"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
+            +
           </button>
         </div>
 
@@ -207,6 +210,6 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

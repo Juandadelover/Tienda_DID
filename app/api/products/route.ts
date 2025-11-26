@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { verifySession } from '@/lib/auth/sessionHelper';
+
+// Configurar cache y revalidación
+export const revalidate = 30; // Revalidar cada 30 segundos
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,7 +18,7 @@ export async function GET(request: NextRequest) {
     // Default to showing only available products
     const available = availableParam === 'false' ? false : true;
 
-    // Build query
+    // Build query - optimizada para rendimiento
     let query = supabase
       .from('products')
       .select(`
@@ -40,7 +44,8 @@ export async function GET(request: NextRequest) {
         created_at,
         updated_at
       `)
-      .order('name', { ascending: true });
+      .order('name', { ascending: true })
+      .limit(100); // Limitar resultados para mejor rendimiento
 
     // Apply filters
     if (available !== null) {
@@ -48,7 +53,16 @@ export async function GET(request: NextRequest) {
     }
 
     if (category) {
-      query = query.eq('categories.slug', category);
+      // Filtrar por slug de categoría usando subquery
+      const { data: categoryData } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('slug', category)
+        .single();
+      
+      if (categoryData) {
+        query = query.eq('category_id', categoryData.id);
+      }
     }
 
     if (search) {
@@ -88,7 +102,15 @@ export async function GET(request: NextRequest) {
       updated_at: product.updated_at,
     })) || [];
 
-    return NextResponse.json({ products });
+    // Respuesta con headers de caché
+    return NextResponse.json(
+      { products },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
+        },
+      }
+    );
   } catch (error) {
     console.error('Unexpected error:', error);
     return NextResponse.json(
@@ -104,17 +126,16 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
+    // Verificar sesión custom
+    const session = await verifySession();
+    if (!session) {
       return NextResponse.json(
         { error: 'No autorizado' },
         { status: 401 }
       );
     }
 
+    const supabase = await createClient();
     const body = await request.json();
     const { name, description, category_id, image_url, unit_type, has_variants, base_price } = body;
 

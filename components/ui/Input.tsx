@@ -1,74 +1,137 @@
 /**
  * Input Component
- * Text input with label, error states, and validation
+ * Campo de entrada de texto con soporte para label, estados de error y mensajes de ayuda
+ * Implementa mejores prácticas de accesibilidad WCAG AA y UX
+ * 
+ * Características:
+ * - Label accesible con asociación correcta
+ * - Estados visuales claros (focus, error, disabled)
+ * - Mensajes de error semánticos con role="alert"
+ * - Altura mínima de 44px para móvil (WCAG)
+ * - Contraste de colores WCAG AAA
+ * - Soporte para helperText adicional
  */
 
 'use client';
 
 import React from 'react';
+import { motion } from 'motion/react';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   helperText?: string;
   fullWidth?: boolean;
+  icon?: React.ReactNode;
+  iconPosition?: 'left' | 'right';
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, helperText, fullWidth = false, className = '', id, ...props }, ref) => {
-    // Generate stable ID using React's useId hook
+  ({ 
+    label, 
+    error, 
+    helperText, 
+    fullWidth = false, 
+    className = '', 
+    id, 
+    icon,
+    iconPosition = 'left',
+    ...props 
+  }, ref) => {
+    // Generar ID estable si no se proporciona
     const generatedId = React.useId();
     const inputId = id || generatedId;
     
-    // Base input styles
-    const baseStyles = 'px-4 py-3 border rounded-lg text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:bg-gray-100 disabled:cursor-not-allowed min-h-[44px]';
+    // Estilos base - aplican a todos los inputs
+    const baseInputStyles = `
+      w-full px-4 py-3 border rounded-lg text-base 
+      transition-all duration-200 
+      focus:outline-none focus:ring-2 focus:ring-offset-2
+      disabled:bg-secondary-50 disabled:text-text-disabled disabled:cursor-not-allowed disabled:border-secondary-200
+      placeholder:text-text-disabled
+      min-h-[44px]
+      appearance-none
+    `;
     
-    // Error state styles
-    const errorStyles = error
-      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-      : 'border-gray-300 focus:border-primary focus:ring-primary';
+    // Estilos según estado de error
+    const errorInputStyles = error
+      ? 'border-status-error bg-status-error/5 focus:border-status-error focus:ring-status-error'
+      : 'border-secondary-200 focus:border-primary focus:ring-primary';
     
-    // Width styles
+    // Estilos de ancho
     const widthStyles = fullWidth ? 'w-full' : '';
     
-    // Combine classes
-    const inputClasses = `${baseStyles} ${errorStyles} ${widthStyles} ${className}`;
+    // Combinar clases
+    const inputClasses = `${baseInputStyles} ${errorInputStyles} ${widthStyles} ${className}`.replace(/\n/g, ' ').trim();
+    
+    const containerClasses = `${fullWidth ? 'w-full' : ''}`;
     
     return (
-      <div className={fullWidth ? 'w-full' : ''}>
+      <div className={containerClasses}>
+        {/* Label accesible */}
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-text-primary mb-1"
+            className="block text-sm font-medium text-text-primary mb-2"
           >
             {label}
-            {props.required && <span className="text-red-500 ml-1">*</span>}
+            {props.required && (
+              <span className="text-status-error ml-1" aria-label="requerido">*</span>
+            )}
           </label>
         )}
         
-        <input
-          ref={ref}
-          id={inputId}
-          className={inputClasses}
-          aria-invalid={error ? 'true' : 'false'}
-          aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
-          {...props}
-        />
+        {/* Contenedor del input con soporte para ícono */}
+        <div className="relative">
+          {/* Input con animación de shake en caso de error */}
+          <motion.input
+            ref={ref}
+            id={inputId}
+            className={inputClasses}
+            aria-invalid={error ? 'true' : 'false'}
+            aria-describedby={
+              error 
+                ? `${inputId}-error` 
+                : helperText 
+                  ? `${inputId}-helper` 
+                  : undefined
+            }
+            animate={error ? { x: [0, -5, 5, -5, 0] } : { x: 0 }}
+            transition={error ? { duration: 0.4, times: [0, 0.2, 0.4, 0.6, 1] } : { duration: 0 }}
+            {...props}
+          />
+          
+          {/* Ícono */}
+          {icon && (
+            <span 
+              className={`
+                absolute top-1/2 -translate-y-1/2 
+                text-text-secondary pointer-events-none
+                ${iconPosition === 'left' ? 'left-3' : 'right-3'}
+              `}
+              aria-hidden="true"
+            >
+              {icon}
+            </span>
+          )}
+        </div>
         
+        {/* Mensaje de error */}
         {error && (
           <p
             id={`${inputId}-error`}
-            className="mt-1 text-sm text-red-600"
+            className="mt-2 text-sm text-status-error font-medium"
             role="alert"
           >
             {error}
           </p>
         )}
         
+        {/* Mensaje de ayuda (solo si no hay error) */}
         {!error && helperText && (
           <p
             id={`${inputId}-helper`}
-            className="mt-1 text-sm text-gray-500"
+            className="mt-2 text-sm text-text-secondary"
           >
             {helperText}
           </p>
@@ -82,7 +145,8 @@ Input.displayName = 'Input';
 
 /**
  * Textarea Component
- * Multi-line text input with same styling as Input
+ * Área de texto multilínea con mismo estilo que Input
+ * Optimizado para accesibilidad y UX
  */
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
@@ -93,53 +157,82 @@ export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextArea
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ label, error, helperText, fullWidth = false, className = '', id, ...props }, ref) => {
-    const textareaId = id || `textarea-${Math.random().toString(36).substr(2, 9)}`;
+    const generatedId = React.useId();
+    const textareaId = id || generatedId;
     
-    const baseStyles = 'px-4 py-3 border rounded-lg text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:bg-gray-100 disabled:cursor-not-allowed min-h-[88px] resize-y';
+    // Estilos base para textarea
+    const baseTextareaStyles = `
+      w-full px-4 py-3 border rounded-lg text-base 
+      transition-all duration-200 
+      focus:outline-none focus:ring-2 focus:ring-offset-2
+      disabled:bg-secondary-50 disabled:text-text-disabled disabled:cursor-not-allowed disabled:border-secondary-200
+      placeholder:text-text-disabled
+      min-h-[88px] resize-y
+      appearance-none
+    `;
     
-    const errorStyles = error
-      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-      : 'border-gray-300 focus:border-primary focus:ring-primary';
+    // Estilos según estado de error
+    const errorTextareaStyles = error
+      ? 'border-status-error bg-status-error/5 focus:border-status-error focus:ring-status-error'
+      : 'border-secondary-200 focus:border-primary focus:ring-primary';
     
+    // Estilos de ancho
     const widthStyles = fullWidth ? 'w-full' : '';
     
-    const textareaClasses = `${baseStyles} ${errorStyles} ${widthStyles} ${className}`;
+    // Combinar clases
+    const textareaClasses = `${baseTextareaStyles} ${errorTextareaStyles} ${widthStyles} ${className}`.replace(/\n/g, ' ').trim();
+    
+    const containerClasses = `${fullWidth ? 'w-full' : ''}`;
     
     return (
-      <div className={fullWidth ? 'w-full' : ''}>
+      <div className={containerClasses}>
+        {/* Label accesible */}
         {label && (
           <label
             htmlFor={textareaId}
-            className="block text-sm font-medium text-text-primary mb-1"
+            className="block text-sm font-medium text-text-primary mb-2"
           >
             {label}
-            {props.required && <span className="text-red-500 ml-1">*</span>}
+            {props.required && (
+              <span className="text-status-error ml-1" aria-label="requerido">*</span>
+            )}
           </label>
         )}
         
-        <textarea
+        {/* Textarea */}
+        <motion.textarea
           ref={ref}
           id={textareaId}
           className={textareaClasses}
           aria-invalid={error ? 'true' : 'false'}
-          aria-describedby={error ? `${textareaId}-error` : helperText ? `${textareaId}-helper` : undefined}
+          aria-describedby={
+            error 
+              ? `${textareaId}-error` 
+              : helperText 
+                ? `${textareaId}-helper` 
+                : undefined
+          }
+          animate={error ? { x: [0, -5, 5, -5, 0] } : { x: 0 }}
+          transition={error ? { duration: 0.4, times: [0, 0.2, 0.4, 0.6, 1] } : { duration: 0 }}
           {...props}
         />
         
+        {/* Mensaje de error */}
         {error && (
           <p
             id={`${textareaId}-error`}
-            className="mt-1 text-sm text-red-600"
+            className="mt-2 text-sm text-status-error font-medium"
             role="alert"
           >
             {error}
           </p>
         )}
         
+        {/* Mensaje de ayuda (solo si no hay error) */}
         {!error && helperText && (
           <p
             id={`${textareaId}-helper`}
-            className="mt-1 text-sm text-gray-500"
+            className="mt-2 text-sm text-text-secondary"
           >
             {helperText}
           </p>

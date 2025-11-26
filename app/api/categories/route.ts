@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { verifySession } from '@/lib/auth/sessionHelper';
 
 /**
  * Generate URL-safe slug from category name
@@ -62,17 +63,16 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-
-    // Verify authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
+    // Verificar sesión custom
+    const session = await verifySession();
+    if (!session) {
       return NextResponse.json(
         { error: 'No autorizado' },
         { status: 401 }
       );
     }
+
+    const supabase = await createClient();
 
     // Parse request body
     const body = await request.json();

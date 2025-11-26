@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { verifySession } from '@/lib/auth/sessionHelper';
 
 /**
  * POST /api/variants
@@ -7,16 +8,16 @@ import { createClient } from '@/lib/supabase/server';
  */
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
+    // Verificar sesión custom
+    const session = await verifySession();
+    if (!session) {
       return NextResponse.json(
         { error: 'No autorizado' },
         { status: 401 }
       );
     }
+
+    const supabase = await createClient();
 
     const body = await request.json();
     const { product_id, variant_name, price, is_available = true } = body;

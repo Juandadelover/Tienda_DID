@@ -1,22 +1,36 @@
 'use client';
 
 import Link from 'next/link';
+import { motion } from 'motion/react';
 import { useCartContext } from '@/context/CartContext';
+import { cn } from '@/lib/utils';
 
-export function CartButton() {
+interface CartButtonProps {
+  variant?: 'default' | 'circular';
+}
+
+export function CartButton({ variant = 'default' }: CartButtonProps) {
   const { cart } = useCartContext();
+
+  const isCircular = variant === 'circular';
 
   return (
     <Link
       href="/carrito"
-      className="relative p-2 hover:bg-slate-100 rounded-lg transition-colors min-w-[44px] min-h-[44px] flex items-center justify-center"
+      className={cn(
+        "relative flex items-center justify-center transition-colors",
+        isCircular 
+          ? "cursor-pointer overflow-hidden rounded-full h-10 w-10 bg-emerald-600/10 text-gray-800 hover:bg-emerald-600/20"
+          : "p-2 hover:bg-slate-100 rounded-lg min-w-[44px] min-h-[44px]"
+      )}
       aria-label={`Carrito de compras, ${cart.itemCount} items`}
     >
       {/* Cart icon */}
       <svg
-        className="w-6 h-6 text-slate-700"
-        fill="none"
-        stroke="currentColor"
+        className={cn(
+          "fill-none stroke-current",
+          isCircular ? "w-5 h-5" : "w-6 h-6 text-slate-700"
+        )}
         viewBox="0 0 24 24"
       >
         <path
@@ -27,11 +41,26 @@ export function CartButton() {
         />
       </svg>
 
-      {/* Item count badge */}
+      {/* Item count badge con pulse animation */}
       {cart.itemCount > 0 && (
-        <span className="absolute -top-1 -right-1 bg-emerald-600 text-white text-xs font-bold rounded-full min-w-[20px] h-5 flex items-center justify-center px-1">
+        <motion.span
+          className={cn(
+            "absolute bg-emerald-600 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1",
+            isCircular ? "-top-0.5 -right-0.5" : "-top-1 -right-1"
+          )}
+          initial={{ scale: 1 }}
+          animate={{ scale: [1, 1.15, 1] }}
+          transition={{
+            repeat: Infinity,
+            duration: 2,
+            ease: 'easeInOut',
+          }}
+          aria-live="polite"
+          aria-label={`${cart.itemCount} productos en el carrito`}
+          role="status"
+        >
           {cart.itemCount > 99 ? '99+' : cart.itemCount}
-        </span>
+        </motion.span>
       )}
     </Link>
   );

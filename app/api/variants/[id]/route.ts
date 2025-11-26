@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { verifySession } from '@/lib/auth/sessionHelper';
 
 /**
  * PATCH /api/variants/[id]
@@ -10,17 +11,17 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const supabase = await createClient();
-
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
+    // Verificar sesión custom
+    const session = await verifySession();
+    if (!session) {
       return NextResponse.json(
         { error: 'No autorizado' },
         { status: 401 }
       );
     }
+
+    const { id } = await params;
+    const supabase = await createClient();
 
     const body = await request.json();
     const { variant_name, price, is_available } = body;
@@ -79,17 +80,17 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const supabase = await createClient();
-
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
+    // Verificar sesión custom
+    const session = await verifySession();
+    if (!session) {
       return NextResponse.json(
         { error: 'No autorizado' },
         { status: 401 }
       );
     }
+
+    const { id } = await params;
+    const supabase = await createClient();
 
     // Get variant to find product_id
     const { data: variant, error: getError } = await supabase

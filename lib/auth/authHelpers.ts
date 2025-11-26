@@ -1,41 +1,46 @@
 /**
  * Authentication Helpers
- * Functions for admin authentication using Supabase Auth
+ * Functions for admin authentication using custom users table
  */
 
-import { createClient } from '@/lib/supabase/client';
-import type { User, Session } from '@supabase/supabase-js';
+export interface SessionUser {
+  userId: string;
+  email: string;
+  fullName: string;
+  role: string;
+}
 
 export interface AuthResult {
   success: boolean;
   error?: string;
-  user?: User;
-  session?: Session;
+  user?: SessionUser;
 }
 
 /**
  * Sign in with email and password
  */
 export async function login(email: string, password: string): Promise<AuthResult> {
-  const supabase = createClient();
-  
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
     });
 
-    if (error) {
+    const data = await response.json();
+
+    if (!response.ok) {
       return {
         success: false,
-        error: getErrorMessage(error.message),
+        error: data.error || 'Error de autenticación',
       };
     }
 
     return {
       success: true,
       user: data.user,
-      session: data.session,
     };
   } catch (error) {
     console.error('Login error:', error);
@@ -50,12 +55,12 @@ export async function login(email: string, password: string): Promise<AuthResult
  * Sign out current user
  */
 export async function logout(): Promise<AuthResult> {
-  const supabase = createClient();
-  
   try {
-    const { error } = await supabase.auth.signOut();
+    const response = await fetch('/api/auth/logout', {
+      method: 'POST',
+    });
 
-    if (error) {
+    if (!response.ok) {
       return {
         success: false,
         error: 'Error al cerrar sesión.',
@@ -75,12 +80,19 @@ export async function logout(): Promise<AuthResult> {
 /**
  * Get current session
  */
-export async function getSession(): Promise<Session | null> {
-  const supabase = createClient();
-  
+export async function getSession(): Promise<SessionUser | null> {
   try {
-    const { data: { session } } = await supabase.auth.getSession();
-    return session;
+    const response = await fetch('/api/auth/session', {
+      method: 'GET',
+      cache: 'no-store',
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data.session;
   } catch (error) {
     console.error('Get session error:', error);
     return null;
@@ -88,18 +100,10 @@ export async function getSession(): Promise<Session | null> {
 }
 
 /**
- * Get current user
+ * Get current user (alias for getSession)
  */
-export async function getUser(): Promise<User | null> {
-  const supabase = createClient();
-  
-  try {
-    const { data: { user } } = await supabase.auth.getUser();
-    return user;
-  } catch (error) {
-    console.error('Get user error:', error);
-    return null;
-  }
+export async function getUser(): Promise<SessionUser | null> {
+  return getSession();
 }
 
 /**
@@ -108,35 +112,4 @@ export async function getUser(): Promise<User | null> {
 export async function isAuthenticated(): Promise<boolean> {
   const session = await getSession();
   return session !== null;
-}
-
-/**
- * Subscribe to auth state changes
- */
-export function onAuthStateChange(callback: (session: Session | null) => void) {
-  const supabase = createClient();
-  
-  const { data: { subscription } } = supabase.auth.onAuthStateChange(
-    (_event, session) => {
-      callback(session);
-    }
-  );
-
-  return subscription;
-}
-
-/**
- * Translate Supabase auth errors to Spanish
- */
-function getErrorMessage(error: string): string {
-  const errorMessages: Record<string, string> = {
-    'Invalid login credentials': 'Credenciales inválidas. Verifica tu email y contraseña.',
-    'Email not confirmed': 'Email no confirmado. Revisa tu bandeja de entrada.',
-    'User not found': 'Usuario no encontrado.',
-    'Invalid email or password': 'Email o contraseña incorrectos.',
-    'Too many requests': 'Demasiados intentos. Espera unos minutos.',
-    'Network request failed': 'Error de conexión. Verifica tu internet.',
-  };
-
-  return errorMessages[error] || 'Error de autenticación. Intenta nuevamente.';
 }

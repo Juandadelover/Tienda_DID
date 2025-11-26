@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { verifySession } from '@/lib/auth/sessionHelper';
 
 export async function GET(
   request: NextRequest,
@@ -93,17 +94,17 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const supabase = await createClient();
-
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
+    // Verificar sesión custom
+    const session = await verifySession();
+    if (!session) {
       return NextResponse.json(
         { error: 'No autorizado' },
         { status: 401 }
       );
     }
+
+    const { id } = await params;
+    const supabase = await createClient();
 
     const body = await request.json();
     const { name, description, category_id, image_url, unit_type, is_available, has_variants, base_price } = body;
@@ -167,17 +168,17 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const supabase = await createClient();
-
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
+    // Verificar sesión custom
+    const session = await verifySession();
+    if (!session) {
       return NextResponse.json(
         { error: 'No autorizado' },
         { status: 401 }
       );
     }
+
+    const { id } = await params;
+    const supabase = await createClient();
 
     // Delete product variants first (cascade should handle this, but just in case)
     await supabase

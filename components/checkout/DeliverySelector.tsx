@@ -1,11 +1,15 @@
 'use client';
 
 /**
- * DeliverySelector Component
+ * DeliverySelector Component (Mejorado)
  * Radio buttons for selecting delivery type (Pickup vs Delivery)
+ * - Slide animation cuando cambia selección
+ * - Campos adicionales aparecen/desaparecen suavemente
+ * - Accesible: aria-label, aria-checked
  */
 
 import React from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 
 interface DeliverySelectorProps {
   value: 'pickup' | 'delivery';
@@ -22,7 +26,7 @@ export function DeliverySelector({ value, onChange, disabled = false }: Delivery
 
       <div className="space-y-2">
         {/* Pickup Option */}
-        <label
+        <motion.label
           className={`
             flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all
             ${value === 'pickup' 
@@ -31,6 +35,8 @@ export function DeliverySelector({ value, onChange, disabled = false }: Delivery
             }
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
           `}
+          whileHover={!disabled ? { scale: 1.01 } : {}}
+          whileTap={!disabled ? { scale: 0.99 } : {}}
         >
           <input
             type="radio"
@@ -40,6 +46,7 @@ export function DeliverySelector({ value, onChange, disabled = false }: Delivery
             onChange={(e) => onChange(e.target.value as 'pickup' | 'delivery')}
             disabled={disabled}
             className="w-5 h-5 text-emerald-600 focus:ring-emerald-500 focus:ring-offset-2"
+            aria-label="Recoger en tienda"
           />
           <div className="flex-1">
             <div className="flex items-center gap-2">
@@ -50,10 +57,10 @@ export function DeliverySelector({ value, onChange, disabled = false }: Delivery
               Sector 1 Manzana D-1, Barrio Villa Consuelo, Bosconia - Cesar
             </p>
           </div>
-        </label>
+        </motion.label>
 
         {/* Delivery Option */}
-        <label
+        <motion.label
           className={`
             flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer transition-all
             ${value === 'delivery' 
@@ -62,6 +69,8 @@ export function DeliverySelector({ value, onChange, disabled = false }: Delivery
             }
             ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
           `}
+          whileHover={!disabled ? { scale: 1.01 } : {}}
+          whileTap={!disabled ? { scale: 0.99 } : {}}
         >
           <input
             type="radio"
@@ -71,6 +80,7 @@ export function DeliverySelector({ value, onChange, disabled = false }: Delivery
             onChange={(e) => onChange(e.target.value as 'pickup' | 'delivery')}
             disabled={disabled}
             className="w-5 h-5 text-emerald-600 focus:ring-emerald-500 focus:ring-offset-2"
+            aria-label="Entrega a domicilio gratis"
           />
           <div className="flex-1">
             <div className="flex items-center gap-2">
@@ -81,7 +91,7 @@ export function DeliverySelector({ value, onChange, disabled = false }: Delivery
               Entrega gratuita en Bosconia
             </p>
           </div>
-        </label>
+        </motion.label>
       </div>
     </div>
   );

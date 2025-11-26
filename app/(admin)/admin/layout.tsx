@@ -3,13 +3,14 @@
 /**
  * Admin Layout
  * Protected layout with authentication check and sidebar navigation
+ * Modern premium design
  */
 
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AdminNav } from '@/components/layout/AdminNav';
 import { Spinner } from '@/components/ui/Spinner';
-import { getSession, onAuthStateChange } from '@/lib/auth/authHelpers';
+import { getSession } from '@/lib/auth/authHelpers';
 
 export default function AdminLayout({
   children,
@@ -33,28 +34,17 @@ export default function AdminLayout({
     };
 
     checkAuth();
-
-    // Subscribe to auth changes
-    const subscription = onAuthStateChange((session) => {
-      if (!session) {
-        setIsAuthenticated(false);
-        router.replace('/login');
-      } else {
-        setIsAuthenticated(true);
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
   }, [router]);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-100">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-slate-100 to-emerald-50">
         <div className="text-center">
-          <Spinner />
-          <p className="mt-4 text-slate-600">Verificando sesión...</p>
+          <div className="relative inline-block">
+            <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full animate-pulse"></div>
+            <Spinner />
+          </div>
+          <p className="mt-6 text-slate-600 font-medium">Verificando sesión...</p>
         </div>
       </div>
     );
@@ -65,13 +55,13 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-100">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 via-slate-100 to-emerald-50/30">
       {/* Sidebar */}
       <AdminNav />
 
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
-        <div className="p-6 lg:p-8">
+        <div className="p-6 lg:p-10 max-w-[1600px]">
           {children}
         </div>
       </main>
