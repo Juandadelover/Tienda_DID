@@ -1,8 +1,7 @@
 /**
  * Database Types
- * Generated from Supabase schema
- * 
- * To regenerate: npx supabase gen types typescript --project-id YOUR_PROJECT_ID > lib/supabase/types.ts
+ * Auto-generated from Supabase schema
+ * Last updated: 2025-11-26
  */
 
 export type Json =
@@ -11,116 +10,116 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
+  | Json[]
 
 export interface Database {
   public: {
     Tables: {
       categories: {
         Row: {
+          created_at: string | null;
           id: string;
           name: string;
           slug: string;
-          created_at: string;
         };
         Insert: {
+          created_at?: string | null;
           id?: string;
           name: string;
           slug: string;
-          created_at?: string;
         };
         Update: {
+          created_at?: string | null;
           id?: string;
           name?: string;
           slug?: string;
-          created_at?: string;
         };
       };
       products: {
         Row: {
-          id: string;
-          name: string;
-          description: string | null;
-          category_id: string;
-          image_url: string | null;
-          unit_type: 'unit' | 'weight';
-          is_available: boolean;
-          has_variants: boolean;
           base_price: number | null;
-          created_at: string;
-          updated_at: string;
+          category_id: string;
+          created_at: string | null;
+          description: string | null;
+          has_variants: boolean;
+          id: string;
+          image_url: string | null;
+          is_available: boolean;
+          name: string;
+          unit_type: string;
+          updated_at: string | null;
         };
         Insert: {
-          id?: string;
-          name: string;
-          description?: string | null;
-          category_id: string;
-          image_url?: string | null;
-          unit_type: 'unit' | 'weight';
-          is_available?: boolean;
-          has_variants?: boolean;
           base_price?: number | null;
-          created_at?: string;
-          updated_at?: string;
+          category_id: string;
+          created_at?: string | null;
+          description?: string | null;
+          has_variants?: boolean;
+          id?: string;
+          image_url?: string | null;
+          is_available?: boolean;
+          name: string;
+          unit_type: string;
+          updated_at?: string | null;
         };
         Update: {
-          id?: string;
-          name?: string;
-          description?: string | null;
-          category_id?: string;
-          image_url?: string | null;
-          unit_type?: 'unit' | 'weight';
-          is_available?: boolean;
-          has_variants?: boolean;
           base_price?: number | null;
-          created_at?: string;
-          updated_at?: string;
+          category_id?: string;
+          created_at?: string | null;
+          description?: string | null;
+          has_variants?: boolean;
+          id?: string;
+          image_url?: string | null;
+          is_available?: boolean;
+          name?: string;
+          unit_type?: string;
+          updated_at?: string | null;
         };
       };
       product_variants: {
         Row: {
+          created_at: string | null;
           id: string;
+          is_available: boolean;
+          price: number;
           product_id: string;
           variant_name: string;
-          price: number;
-          is_available: boolean;
-          created_at: string;
         };
         Insert: {
+          created_at?: string | null;
           id?: string;
+          is_available?: boolean;
+          price: number;
           product_id: string;
           variant_name: string;
-          price: number;
-          is_available?: boolean;
-          created_at?: string;
         };
         Update: {
+          created_at?: string | null;
           id?: string;
+          is_available?: boolean;
+          price?: number;
           product_id?: string;
           variant_name?: string;
-          price?: number;
-          is_available?: boolean;
-          created_at?: string;
         };
       };
       settings: {
         Row: {
           id: string;
           key: string;
+          updated_at: string | null;
           value: string;
-          updated_at: string;
         };
         Insert: {
           id?: string;
           key: string;
+          updated_at?: string | null;
           value: string;
-          updated_at?: string;
         };
         Update: {
           id?: string;
           key?: string;
+          updated_at?: string | null;
           value?: string;
-          updated_at?: string;
         };
       };
     };

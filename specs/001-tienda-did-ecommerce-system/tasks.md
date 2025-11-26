@@ -54,40 +54,40 @@ description: "Implementation tasks for Tienda DID E-Commerce System"
 
 ### Database & Authentication Setup
 
-- [ ] T016 Setup Supabase project via Supabase dashboard and obtain credentials
-- [ ] T017 Create lib/supabase/client.ts with browser Supabase client
-- [ ] T018 Create lib/supabase/server.ts with server-side Supabase client for Server Components
-- [ ] T019 Create supabase/migrations/001_initial_schema.sql with categories, products, product_variants, settings tables
-- [ ] T020 Create supabase/migrations/002_rls_policies.sql with Row Level Security policies per data-model.md
-- [ ] T021 Create supabase/migrations/003_storage_setup.sql for product-images bucket configuration
-- [ ] T022 Create supabase/seed.sql with 6 default categories (Abarrotes, Bebidas, Productos de aseo, Snacks y dulces, Lácteos y refrigerados, Otros) and settings
-- [ ] T023 Execute migrations 001, 002, 003 on Supabase project
-- [ ] T024 Execute seed.sql to populate categories and settings
-- [ ] T025 Create admin user in Supabase Auth via Supabase dashboard
-- [ ] T026 Generate TypeScript types from Supabase schema and save to lib/supabase/types.ts
+- [X] T016 Setup Supabase project via Supabase dashboard and obtain credentials
+- [X] T017 Create lib/supabase/client.ts with browser Supabase client
+- [X] T018 Create lib/supabase/server.ts with server-side Supabase client for Server Components
+- [X] T019 Create supabase/migrations/001_initial_schema.sql with categories, products, product_variants, settings tables
+- [X] T020 Create supabase/migrations/002_rls_policies.sql with Row Level Security policies per data-model.md
+- [X] T021 Create supabase/migrations/003_storage_setup.sql for product-images bucket configuration
+- [X] T022 Create supabase/seed.sql with 6 default categories (Abarrotes, Bebidas, Productos de aseo, Snacks y dulces, Lácteos y refrigerados, Otros) and settings
+- [X] T023 Execute migrations 001, 002, 003 on Supabase project
+- [X] T024 Execute seed.sql to populate categories and settings
+- [X] T025 Create admin user in Supabase Auth via Supabase dashboard
+- [X] T026 Generate TypeScript types from Supabase schema and save to lib/supabase/types.ts
 
 ### Utility Functions & Hooks
 
-- [ ] T027 [P] Create lib/utils/formatters.ts with currency and date formatting functions
-- [ ] T028 [P] Create lib/utils/validators.ts with Zod schemas for form validation
-- [ ] T029 [P] Create lib/utils/whatsapp.ts with generateWhatsAppMessage function per RF-11 format
-- [ ] T030 [P] Create lib/hooks/useHorario.ts for business hours validation (closes at 22:00)
+- [X] T027 [P] Create lib/utils/formatters.ts with currency and date formatting functions
+- [X] T028 [P] Create lib/utils/validators.ts with Zod schemas for form validation
+- [X] T029 [P] Create lib/utils/whatsapp.ts with generateWhatsAppMessage function per RF-11 format
+- [X] T030 [P] Create lib/hooks/useHorario.ts for business hours validation (closes at 22:00)
 
 ### Base UI Components
 
-- [ ] T031 [P] Create components/ui/Button.tsx with variants (primary, secondary, danger, ghost)
-- [ ] T032 [P] Create components/ui/Card.tsx reusable card component
-- [ ] T033 [P] Create components/ui/Input.tsx form input with error states
-- [ ] T034 [P] Create components/ui/Badge.tsx for status badges (disponible, agotado, nuevo)
-- [ ] T035 [P] Create components/ui/Modal.tsx reusable modal dialog
-- [ ] T036 [P] Create components/ui/Spinner.tsx loading spinner component
+- [X] T031 [P] Create components/ui/Button.tsx with variants (primary, secondary, danger, ghost)
+- [X] T032 [P] Create components/ui/Card.tsx reusable card component
+- [X] T033 [P] Create components/ui/Input.tsx form input with error states
+- [X] T034 [P] Create components/ui/Badge.tsx for status badges (disponible, agotado, nuevo)
+- [X] T035 [P] Create components/ui/Modal.tsx reusable modal dialog
+- [X] T036 [P] Create components/ui/Spinner.tsx loading spinner component
 
 ### Layout Components
 
-- [ ] T037 Create components/layout/Header.tsx public header (logo, search later, cart later)
-- [ ] T038 Create components/layout/Footer.tsx with store info and hours
-- [ ] T039 Create components/layout/HorarioAlert.tsx business hours alert component
-- [ ] T040 Create app/(public)/layout.tsx public route group layout with Header and Footer
+- [X] T037 Create components/layout/Header.tsx public header (logo, search later, cart later)
+- [X] T038 Create components/layout/Footer.tsx with store info and hours
+- [X] T039 Create components/layout/HorarioAlert.tsx business hours alert component
+- [X] T040 Create app/(public)/layout.tsx public route group layout with Header and Footer
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 

@@ -11,7 +11,11 @@ export interface Customer {
 export interface Order {
   customer: Customer;
   items: OrderItem[];
+  deliveryType: 'pickup' | 'delivery';
+  paymentMethod: 'cash' | 'transfer';
+  notes?: string;
   total: number;
+  storeWhatsAppNumber: string;
   createdAt: Date;
 }
 
@@ -32,7 +36,6 @@ export interface CheckoutFormData {
 }
 
 export interface WhatsAppMessage {
-  phoneNumber: string;
-  message: string;
-  url: string;
+  text: string;
+  phone: string;
 }
