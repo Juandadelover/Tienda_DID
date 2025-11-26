@@ -101,34 +101,34 @@ description: "Implementation tasks for Tienda DID E-Commerce System"
 
 ### API Endpoints for US1
 
-- [ ] T041 [P] [US1] Create app/api/products/route.ts with GET handler (list products with filters: category, available, search)
-- [ ] T042 [P] [US1] Create app/api/products/[id]/route.ts with GET handler (single product with variants)
-- [ ] T043 [P] [US1] Create app/api/categories/route.ts with GET handler (list categories with product_count)
+- [X] T041 [P] [US1] Create app/api/products/route.ts with GET handler (list products with filters: category, available, search)
+- [X] T042 [P] [US1] Create app/api/products/[id]/route.ts with GET handler (single product with variants)
+- [X] T043 [P] [US1] Create app/api/categories/route.ts with GET handler (list categories with product_count)
 
 ### Data Fetching Hooks for US1
 
-- [ ] T044 [US1] Create lib/hooks/useProducts.ts hook for fetching products (depends on T041, T042)
-- [ ] T045 [P] [US1] Create lib/hooks/useCategories.ts hook for fetching categories
+- [X] T044 [US1] Create lib/hooks/useProducts.ts hook for fetching products (depends on T041, T042)
+- [X] T045 [P] [US1] Create lib/hooks/useCategories.ts hook for fetching categories
 
 ### Catalog Components for US1
 
-- [ ] T046 [P] [US1] Create components/catalog/ProductCard.tsx individual product card with image, name, price, badge
-- [ ] T047 [P] [US1] Create components/catalog/ProductGrid.tsx responsive grid layout for products
-- [ ] T048 [P] [US1] Create components/catalog/CategoryFilter.tsx category filter buttons
-- [ ] T049 [P] [US1] Create components/catalog/SearchBar.tsx real-time search with debounce (<500ms)
-- [ ] T050 [P] [US1] Create components/catalog/ProductModal.tsx product detail modal with variants
+- [X] T046 [P] [US1] Create components/catalog/ProductCard.tsx individual product card with image, name, price, badge
+- [X] T047 [P] [US1] Create components/catalog/ProductGrid.tsx responsive grid layout for products
+- [X] T048 [P] [US1] Create components/catalog/CategoryFilter.tsx category filter buttons
+- [X] T049 [P] [US1] Create components/catalog/SearchBar.tsx real-time search with debounce (<500ms)
+- [X] T050 [P] [US1] Create components/catalog/ProductModal.tsx product detail modal with variants
 
 ### Main Catalog Page for US1
 
-- [ ] T051 [US1] Create app/(public)/page.tsx home/catalog page integrating ProductGrid, CategoryFilter, SearchBar (depends on T046-T050)
-- [ ] T052 [US1] Implement mobile-first responsive design with breakpoints (mobile <768px, tablet 768-1024px, desktop >1024px)
-- [ ] T053 [US1] Add lazy loading for product images using next/image with placeholder
-- [ ] T054 [US1] Test product availability logic (agotado products show badge and can't be added to cart)
-- [ ] T055 [US1] Test product variants display in ProductModal
-- [ ] T056 [US1] Test search functionality filters products in <500ms
-- [ ] T057 [US1] Test category filter updates product list correctly
-- [ ] T058 [US1] Verify touch targets ≥44x44px on mobile for all interactive elements
-- [ ] T059 [US1] Test business hours alert displays when store is closed (after 10 PM)
+- [X] T051 [US1] Create app/(public)/page.tsx home/catalog page integrating ProductGrid, CategoryFilter, SearchBar (depends on T046-T050)
+- [X] T052 [US1] Implement mobile-first responsive design with breakpoints (mobile <768px, tablet 768-1024px, desktop >1024px)
+- [X] T053 [US1] Add lazy loading for product images using next/image with placeholder
+- [X] T054 [US1] Test product availability logic (agotado products show badge and can't be added to cart)
+- [X] T055 [US1] Test product variants display in ProductModal
+- [X] T056 [US1] Test search functionality filters products in <500ms
+- [X] T057 [US1] Test category filter updates product list correctly
+- [X] T058 [US1] Verify touch targets ≥44x44px on mobile for all interactive elements
+- [X] T059 [US1] Test business hours alert displays when store is closed (after 10 PM)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently (MVP ready!)
 
@@ -142,38 +142,38 @@ description: "Implementation tasks for Tienda DID E-Commerce System"
 
 ### Cart State Management for US2
 
-- [ ] T060 [P] [US2] Create lib/hooks/useCart.ts custom hook with localStorage persistence (add, remove, update quantity, clear, total calculation)
-- [ ] T061 [P] [US2] Create context/CartContext.tsx React Context for cart state management
+- [X] T060 [P] [US2] Create lib/hooks/useCart.ts custom hook with localStorage persistence (add, remove, update quantity, clear, total calculation)
+- [X] T061 [P] [US2] Create context/CartContext.tsx React Context for cart state management
 
 ### Cart Components for US2
 
-- [ ] T062 [P] [US2] Create components/cart/CartButton.tsx header cart icon with item count badge
-- [ ] T063 [P] [US2] Create components/cart/CartItem.tsx cart item row (product, variant, quantity controls, subtotal, delete button)
-- [ ] T064 [P] [US2] Create components/cart/CartSummary.tsx cart totals display (subtotal, total)
-- [ ] T065 [P] [US2] Create components/cart/EmptyCart.tsx empty state with message and "Volver al catálogo" button
+- [X] T062 [P] [US2] Create components/cart/CartButton.tsx header cart icon with item count badge
+- [X] T063 [P] [US2] Create components/cart/CartItem.tsx cart item row (product, variant, quantity controls, subtotal, delete button)
+- [X] T064 [P] [US2] Create components/cart/CartSummary.tsx cart totals display (subtotal, total)
+- [X] T065 [P] [US2] Create components/cart/EmptyCart.tsx empty state with message and "Volver al catálogo" button
 
 ### Cart Page for US2
 
-- [ ] T066 [US2] Create app/(public)/carrito/page.tsx cart page integrating CartItem, CartSummary, EmptyCart (depends on T062-T065)
-- [ ] T067 [US2] Implement quantity increment/decrement with automatic total recalculation
-- [ ] T068 [US2] Implement remove item functionality with confirmation
-- [ ] T069 [US2] Add "Agregar al carrito" button to ProductCard component in components/catalog/ProductCard.tsx
+- [X] T066 [US2] Create app/(public)/carrito/page.tsx cart page integrating CartItem, CartSummary, EmptyCart (depends on T062-T065)
+- [X] T067 [US2] Implement quantity increment/decrement with automatic total recalculation
+- [X] T068 [US2] Implement remove item functionality with confirmation
+- [X] T069 [US2] Add "Agregar al carrito" button to ProductCard component in components/catalog/ProductCard.tsx
 
 ### Integration with US1
 
-- [ ] T070 [US2] Update components/layout/Header.tsx to include CartButton component
-- [ ] T071 [US2] Update components/catalog/ProductModal.tsx to include "Agregar al carrito" with variant selection
+- [X] T070 [US2] Update components/layout/Header.tsx to include CartButton component
+- [X] T071 [US2] Update components/catalog/ProductModal.tsx to include "Agregar al carrito" with variant selection
 
 ### Testing for US2
 
-- [ ] T072 [US2] Test adding product without variants to cart
-- [ ] T073 [US2] Test adding product with variants to cart (must select variant)
-- [ ] T074 [US2] Test modifying quantity updates subtotal and total correctly
-- [ ] T075 [US2] Test removing item from cart
-- [ ] T076 [US2] Test cart persistence in localStorage after browser close/reopen
-- [ ] T077 [US2] Test empty cart state displays correctly
-- [ ] T078 [US2] Test that agotado products cannot be added to cart (button disabled)
-- [ ] T079 [US2] Test setting quantity to 0 automatically removes item
+- [X] T072 [US2] Test adding product without variants to cart
+- [X] T073 [US2] Test adding product with variants to cart (must select variant)
+- [X] T074 [US2] Test modifying quantity updates subtotal and total correctly
+- [X] T075 [US2] Test removing item from cart
+- [X] T076 [US2] Test cart persistence in localStorage after browser close/reopen
+- [X] T077 [US2] Test empty cart state displays correctly
+- [X] T078 [US2] Test that agotado products cannot be added to cart (button disabled)
+- [X] T079 [US2] Test setting quantity to 0 automatically removes item
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 

@@ -3,6 +3,8 @@
  * Text input with label, error states, and validation
  */
 
+'use client';
+
 import React from 'react';
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -14,8 +16,9 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, helperText, fullWidth = false, className = '', id, ...props }, ref) => {
-    // Generate ID if not provided (for label association)
-    const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+    // Generate stable ID using React's useId hook
+    const generatedId = React.useId();
+    const inputId = id || generatedId;
     
     // Base input styles
     const baseStyles = 'px-4 py-3 border rounded-lg text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:bg-gray-100 disabled:cursor-not-allowed min-h-[44px]';

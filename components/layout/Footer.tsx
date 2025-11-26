@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * Footer Component
  * Store information and contact links
