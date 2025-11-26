@@ -22,6 +22,7 @@ npm test && npm run lint
 TypeScript 5.x con Next.js 14+ (App Router), React 19.2: Follow standard conventions
 
 ## Recent Changes
+- 002-ui-ux-improvements: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 
 - 001-tienda-did-ecommerce-system: Added TypeScript 5.x con Next.js 14+ (App Router), React 19.2
 
