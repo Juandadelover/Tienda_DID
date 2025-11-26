@@ -28,21 +28,21 @@ description: "Implementation tasks for Tienda DID E-Commerce System"
 
 **Purpose**: Project initialization and base structure for Next.js 16, TypeScript, Tailwind, Supabase
 
-- [ ] T001 Initialize Next.js 16.0.4 project with TypeScript 5.x and App Router in /home/juanda/tiendadid
-- [ ] T002 [P] Install core dependencies: react@19.2.0, next@16.0.4, typescript@5.x, tailwindcss@4.x
-- [ ] T003 [P] Configure tailwind.config.ts with custom Emerald/Slate palette from paleta-colores-tienda-did.md
-- [ ] T004 [P] Configure tsconfig.json with strict mode enabled
-- [ ] T005 [P] Create .env.example with required variables (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY)
-- [ ] T006 [P] Setup eslint.config.mjs for Next.js and TypeScript
-- [ ] T007 [P] Create app/globals.css with Tailwind directives and custom CSS variables
-- [ ] T008 Create app/layout.tsx root layout with metadata and font configuration
-- [ ] T009 [P] Add Supabase dependencies: @supabase/supabase-js, @supabase/ssr
-- [ ] T010 [P] Create public/images/logo.svg and public/images/placeholder.png
-- [ ] T011 [P] Create lib/constants.ts with WhatsApp number (573235725922), store info, breakpoints
-- [ ] T012 [P] Create types/product.ts with Product and Variant interfaces
-- [ ] T013 [P] Create types/category.ts with Category interfaces
-- [ ] T014 [P] Create types/cart.ts with Cart and CartItem interfaces
-- [ ] T015 [P] Create types/order.ts with Order and Customer interfaces
+- [X] T001 Initialize Next.js 16.0.4 project with TypeScript 5.x and App Router in /home/juanda/tiendadid
+- [X] T002 [P] Install core dependencies: react@19.2.0, next@16.0.4, typescript@5.x, tailwindcss@4.x
+- [X] T003 [P] Configure tailwind.config.ts with custom Emerald/Slate palette from paleta-colores-tienda-did.md
+- [X] T004 [P] Configure tsconfig.json with strict mode enabled
+- [X] T005 [P] Create .env.example with required variables (NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY)
+- [X] T006 [P] Setup eslint.config.mjs for Next.js and TypeScript
+- [X] T007 [P] Create app/globals.css with Tailwind directives and custom CSS variables
+- [X] T008 Create app/layout.tsx root layout with metadata and font configuration
+- [X] T009 [P] Add Supabase dependencies: @supabase/supabase-js, @supabase/ssr
+- [X] T010 [P] Create public/images/logo.svg and public/images/placeholder.png
+- [X] T011 [P] Create lib/constants.ts with WhatsApp number (573235725922), store info, breakpoints
+- [X] T012 [P] Create types/product.ts with Product and Variant interfaces
+- [X] T013 [P] Create types/category.ts with Category interfaces
+- [X] T014 [P] Create types/cart.ts with Cart and CartItem interfaces
+- [X] T015 [P] Create types/order.ts with Order and Customer interfaces
 
 ---
 
