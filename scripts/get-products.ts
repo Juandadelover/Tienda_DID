@@ -38,7 +38,7 @@ async function getProducts() {
 
     products.forEach((product, index) => {
         console.log(`${index + 1}. ${product.name}`);
-        console.log(`   Categoría: ${product.categories?.name || 'Sin categoría'}`);
+        console.log(`   Categoría: ${product.categories?.[0]?.name || 'Sin categoría'}`);
         console.log(`   Descripción: ${product.description || 'Sin descripción'}`);
         console.log(`   Imagen actual: ${product.image_url || 'Sin imagen'}`);
         console.log('');

@@ -137,7 +137,7 @@ export function CheckoutForm({ onSubmit, isLoading = false }: CheckoutFormProps)
   const handleBlur = (field: keyof CheckoutFormData) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
     // Re-validate on blur to ensure consistency
-    validateField(field, formData[field]);
+    validateField(field, formData[field] ?? '');
   };
 
   const handleSubmit = (e: React.FormEvent) => {

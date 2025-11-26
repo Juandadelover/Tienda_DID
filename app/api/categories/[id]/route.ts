@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { verifySession } from '@/lib/auth/sessionHelper';
-import { verifySession } from '@/lib/auth/sessionHelper';
 
 interface RouteParams {
   params: Promise<{ id: string }>;

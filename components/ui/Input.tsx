@@ -82,9 +82,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
         
         {/* Contenedor del input con soporte para ícono */}
-        <div className="relative">
+        <motion.div 
+          className="relative"
+          animate={error ? { x: [0, -5, 5, -5, 0] } : { x: 0 }}
+          transition={error ? { duration: 0.4, times: [0, 0.2, 0.4, 0.6, 1] } : { duration: 0 }}
+        >
           {/* Input con animación de shake en caso de error */}
-          <motion.input
+          <input
             ref={ref}
             id={inputId}
             className={inputClasses}
@@ -96,8 +100,6 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                   ? `${inputId}-helper` 
                   : undefined
             }
-            animate={error ? { x: [0, -5, 5, -5, 0] } : { x: 0 }}
-            transition={error ? { duration: 0.4, times: [0, 0.2, 0.4, 0.6, 1] } : { duration: 0 }}
             {...props}
           />
           
@@ -114,7 +116,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               {icon}
             </span>
           )}
-        </div>
+        </motion.div>
         
         {/* Mensaje de error */}
         {error && (
@@ -200,22 +202,25 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         )}
         
         {/* Textarea */}
-        <motion.textarea
-          ref={ref}
-          id={textareaId}
-          className={textareaClasses}
-          aria-invalid={error ? 'true' : 'false'}
-          aria-describedby={
-            error 
-              ? `${textareaId}-error` 
-              : helperText 
-                ? `${textareaId}-helper` 
-                : undefined
-          }
+        <motion.div
           animate={error ? { x: [0, -5, 5, -5, 0] } : { x: 0 }}
           transition={error ? { duration: 0.4, times: [0, 0.2, 0.4, 0.6, 1] } : { duration: 0 }}
-          {...props}
-        />
+        >
+          <textarea
+            ref={ref}
+            id={textareaId}
+            className={textareaClasses}
+            aria-invalid={error ? 'true' : 'false'}
+            aria-describedby={
+              error 
+                ? `${textareaId}-error` 
+                : helperText 
+                  ? `${textareaId}-helper` 
+                  : undefined
+            }
+            {...props}
+          />
+        </motion.div>
         
         {/* Mensaje de error */}
         {error && (
