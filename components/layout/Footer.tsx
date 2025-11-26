@@ -8,18 +8,11 @@
 import React from 'react';
 import { STORE_INFO, WHATSAPP_NUMBER } from '@/lib/constants';
 import { formatPhoneNumber } from '@/lib/utils/formatters';
-import { getWhatsAppUrl, generateContactMessage } from '@/lib/utils/whatsapp';
+import { sendContactMessage } from '@/lib/utils/whatsapp';
 
 export function Footer() {
   const handleContactClick = () => {
-    const message = generateContactMessage(
-      'Cliente',
-      'Hola, tengo una consulta sobre la tienda.',
-      WHATSAPP_NUMBER
-    );
-    
-    const url = getWhatsAppUrl(message);
-    window.open(url, '_blank', 'noopener,noreferrer');
+    sendContactMessage('Cliente', 'Hola, tengo una consulta sobre la tienda.');
   };
   
   return (

@@ -187,24 +187,24 @@ description: "Implementation tasks for Tienda DID E-Commerce System"
 
 ### Checkout Components for US3
 
-- [ ] T080 [P] [US3] Create components/checkout/CheckoutForm.tsx customer data form (name, phone, delivery type, address, notes) with Zod validation
-- [ ] T081 [P] [US3] Create components/checkout/DeliverySelector.tsx radio buttons for "Recoger en tienda" vs "Domicilio gratis"
-- [ ] T082 [P] [US3] Create components/checkout/OrderSummary.tsx final order review (items, total, delivery type)
-- [ ] T083 [P] [US3] Create components/checkout/WhatsAppButton.tsx "Enviar por WhatsApp" button with disabled state after 10 PM
+- [X] T080 [P] [US3] Create components/checkout/CheckoutForm.tsx customer data form (name, phone, delivery type, address, notes) with Zod validation
+- [X] T081 [P] [US3] Create components/checkout/DeliverySelector.tsx radio buttons for "Recoger en tienda" vs "Domicilio gratis"
+- [X] T082 [P] [US3] Create components/checkout/OrderSummary.tsx final order review (items, total, delivery type)
+- [X] T083 [P] [US3] Create components/checkout/WhatsAppButton.tsx "Enviar por WhatsApp" button with disabled state after 10 PM
 
 ### Checkout Page for US3
 
-- [ ] T084 [US3] Create app/(public)/checkout/page.tsx checkout page integrating all checkout components (depends on T080-T083)
-- [ ] T085 [US3] Implement conditional address field (required for "Domicilio", hidden for "Recoger en tienda")
-- [ ] T086 [US3] Implement form validation with Zod schemas (lib/utils/validators.ts)
-- [ ] T087 [US3] Implement WhatsApp message generation using lib/utils/whatsapp.ts per RF-11 format
-- [ ] T088 [US3] Implement WhatsApp URL generation (https://wa.me/573235725922?text=encoded_message)
-- [ ] T089 [US3] Implement cart clearing after successful WhatsApp message sent
+- [X] T084 [US3] Create app/(public)/checkout/page.tsx checkout page integrating all checkout components (depends on T080-T083)
+- [X] T085 [US3] Implement conditional address field (required for "Domicilio", hidden for "Recoger en tienda")
+- [X] T086 [US3] Implement form validation with Zod schemas (lib/utils/validators.ts)
+- [X] T087 [US3] Implement WhatsApp message generation using lib/utils/whatsapp.ts per RF-11 format
+- [X] T088 [US3] Implement WhatsApp URL generation (https://wa.me/573235725922?text=encoded_message)
+- [X] T089 [US3] Implement cart clearing after successful WhatsApp message sent
 
 ### Business Hours Validation for US3
 
-- [ ] T090 [US3] Integrate useHorario hook to disable "Enviar por WhatsApp" button after 10 PM
-- [ ] T091 [US3] Show HorarioAlert component when store is closed
+- [X] T090 [US3] Integrate useHorario hook to disable "Enviar por WhatsApp" button after 10 PM
+- [X] T091 [US3] Show HorarioAlert component when store is closed
 
 ### Testing for US3
 
@@ -228,45 +228,45 @@ description: "Implementation tasks for Tienda DID E-Commerce System"
 
 ### Authentication for US4
 
-- [ ] T099 [P] [US4] Create app/(public)/login/page.tsx admin login page with email/password form
-- [ ] T100 [P] [US4] Create lib/auth/authHelpers.ts with login, logout, getSession functions using Supabase Auth
-- [ ] T101 [US4] Implement login form validation and error handling
-- [ ] T102 [US4] Implement redirect to /admin on successful login
-- [ ] T103 [US4] Implement redirect to /login for unauthenticated access to admin routes
+- [X] T099 [P] [US4] Create app/(public)/login/page.tsx admin login page with email/password form
+- [X] T100 [P] [US4] Create lib/auth/authHelpers.ts with login, logout, getSession functions using Supabase Auth
+- [X] T101 [US4] Implement login form validation and error handling
+- [X] T102 [US4] Implement redirect to /admin on successful login
+- [X] T103 [US4] Implement redirect to /login for unauthenticated access to admin routes
 
 ### Admin Layout for US4
 
-- [ ] T104 [P] [US4] Create app/(admin)/admin/layout.tsx admin route group layout with authentication check
-- [ ] T105 [P] [US4] Create components/layout/AdminNav.tsx admin sidebar navigation (Dashboard, Productos, Categorías, Cerrar sesión)
-- [ ] T106 [US4] Create app/(admin)/admin/page.tsx admin dashboard with summary stats (total products, categories, available products)
+- [X] T104 [P] [US4] Create app/(admin)/admin/layout.tsx admin route group layout with authentication check
+- [X] T105 [P] [US4] Create components/layout/AdminNav.tsx admin sidebar navigation (Dashboard, Productos, Categorías, Cerrar sesión)
+- [X] T106 [US4] Create app/(admin)/admin/page.tsx admin dashboard with summary stats (total products, categories, available products)
 
 ### Product Management API for US4
 
-- [ ] T107 [P] [US4] Update app/api/products/route.ts with POST handler (create product, admin only)
-- [ ] T108 [P] [US4] Update app/api/products/[id]/route.ts with PATCH handler (update product, admin only)
-- [ ] T109 [P] [US4] Update app/api/products/[id]/route.ts with DELETE handler (delete product, admin only)
-- [ ] T110 [P] [US4] Create app/api/variants/route.ts with POST, PATCH, DELETE handlers for product variants
+- [X] T107 [P] [US4] Update app/api/products/route.ts with POST handler (create product, admin only)
+- [X] T108 [P] [US4] Update app/api/products/[id]/route.ts with PATCH handler (update product, admin only)
+- [X] T109 [P] [US4] Update app/api/products/[id]/route.ts with DELETE handler (delete product, admin only)
+- [X] T110 [P] [US4] Create app/api/variants/route.ts with POST, PATCH, DELETE handlers for product variants
 
 ### Image Upload for US4
 
-- [ ] T111 [US4] Create components/admin/ImageUploader.tsx component for uploading images to Supabase Storage product-images bucket (max 5MB, JPG/PNG/WebP)
-- [ ] T112 [US4] Implement image validation (format, size) and upload to Supabase Storage
-- [ ] T113 [US4] Implement image URL storage in products.image_url
+- [X] T111 [US4] Create components/admin/ImageUploader.tsx component for uploading images to Supabase Storage product-images bucket (max 5MB, JPG/PNG/WebP)
+- [X] T112 [US4] Implement image validation (format, size) and upload to Supabase Storage
+- [X] T113 [US4] Implement image URL storage in products.image_url
 
 ### Product Form Components for US4
 
-- [ ] T114 [P] [US4] Create components/admin/ProductForm.tsx create/edit product form (name, description, category, unit_type, has_variants, base_price, image)
-- [ ] T115 [P] [US4] Create components/admin/VariantManager.tsx manage product variants (add, edit, delete, availability toggle)
-- [ ] T116 [US4] Integrate ImageUploader into ProductForm
-- [ ] T117 [US4] Implement conditional base_price field (required if has_variants=false, hidden if has_variants=true)
-- [ ] T118 [US4] Implement variant fields display (shown only if has_variants=true)
+- [X] T114 [P] [US4] Create components/admin/ProductForm.tsx create/edit product form (name, description, category, unit_type, has_variants, base_price, image)
+- [X] T115 [P] [US4] Create components/admin/VariantManager.tsx manage product variants (add, edit, delete, availability toggle)
+- [X] T116 [US4] Integrate ImageUploader into ProductForm
+- [X] T117 [US4] Implement conditional base_price field (required if has_variants=false, hidden if has_variants=true)
+- [X] T118 [US4] Implement variant fields display (shown only if has_variants=true)
 
 ### Product Management Pages for US4
 
-- [ ] T119 [P] [US4] Create components/admin/ProductTable.tsx admin product list table with edit, delete, availability toggle actions
-- [ ] T120 [US4] Create app/(admin)/admin/productos/page.tsx products list page with ProductTable and "Agregar Producto" button
-- [ ] T121 [US4] Create app/(admin)/admin/productos/nuevo/page.tsx create product page with ProductForm in create mode
-- [ ] T122 [US4] Create app/(admin)/admin/productos/[id]/editar/page.tsx edit product page with ProductForm in edit mode pre-filled with product data
+- [X] T119 [P] [US4] Create components/admin/ProductTable.tsx admin product list table with edit, delete, availability toggle actions
+- [X] T120 [US4] Create app/(admin)/admin/productos/page.tsx products list page with ProductTable and "Agregar Producto" button
+- [X] T121 [US4] Create app/(admin)/admin/productos/nuevo/page.tsx create product page with ProductForm in create mode
+- [X] T122 [US4] Create app/(admin)/admin/productos/[id]/editar/page.tsx edit product page with ProductForm in edit mode pre-filled with product data
 
 ### Testing for US4
 
@@ -296,20 +296,20 @@ description: "Implementation tasks for Tienda DID E-Commerce System"
 
 ### Categories Management API for US5
 
-- [ ] T136 [P] [US5] Update app/api/categories/route.ts with POST handler (create category, admin only)
-- [ ] T137 [P] [US5] Update app/api/categories/[id]/route.ts with GET handler (single category)
-- [ ] T138 [P] [US5] Update app/api/categories/[id]/route.ts with PATCH handler (update category, admin only)
-- [ ] T139 [US5] Update app/api/categories/[id]/route.ts with DELETE handler (delete category with product validation, admin only)
+- [X] T136 [P] [US5] Update app/api/categories/route.ts with POST handler (create category, admin only)
+- [X] T137 [P] [US5] Update app/api/categories/[id]/route.ts with GET handler (single category)
+- [X] T138 [P] [US5] Update app/api/categories/[id]/route.ts with PATCH handler (update category, admin only)
+- [X] T139 [US5] Update app/api/categories/[id]/route.ts with DELETE handler (delete category with product validation, admin only)
 
 ### Category Management Components for US5
 
-- [ ] T140 [P] [US5] Create components/admin/CategoryManager.tsx CRUD interface for categories (list, create form, edit form, delete with confirmation)
-- [ ] T141 [US5] Create app/(admin)/admin/categorias/page.tsx categories management page with CategoryManager component
+- [X] T140 [P] [US5] Create components/admin/CategoryManager.tsx CRUD interface for categories (list, create form, edit form, delete with confirmation)
+- [X] T141 [US5] Create app/(admin)/admin/categorias/page.tsx categories management page with CategoryManager component
 
 ### Slug Generation for US5
 
-- [ ] T142 [US5] Implement automatic slug generation from category name (lowercase, URL-safe) in CategoryManager
-- [ ] T143 [US5] Implement slug uniqueness validation
+- [X] T142 [US5] Implement automatic slug generation from category name (lowercase, URL-safe) in CategoryManager
+- [X] T143 [US5] Implement slug uniqueness validation
 
 ### Testing for US5
 
@@ -346,23 +346,23 @@ description: "Implementation tasks for Tienda DID E-Commerce System"
 
 ### Error Handling & Validation
 
-- [ ] T160 [P] Implement global error boundary in app/layout.tsx
-- [ ] T161 [P] Add error states to all API routes with proper HTTP status codes
-- [ ] T162 [P] Add loading states to all data fetching components
+- [X] T160 [P] Implement global error boundary in app/layout.tsx
+- [X] T161 [P] Add error states to all API routes with proper HTTP status codes
+- [X] T162 [P] Add loading states to all data fetching components
 - [ ] T163 Verify all forms show validation errors in Spanish
 
 ### Documentation & Deployment
 
-- [ ] T164 [P] Update README.md with project overview, setup instructions, tech stack
-- [ ] T165 [P] Verify .env.example has all required variables
+- [X] T164 [P] Update README.md with project overview, setup instructions, tech stack
+- [X] T165 [P] Verify .env.example has all required variables
 - [ ] T166 Run quickstart.md validation (follow all steps on fresh install)
-- [ ] T167 Configure next.config.ts for Vercel deployment (image optimization domains)
-- [ ] T168 Test production build locally with `npm run build && npm start`
+- [X] T167 Configure next.config.ts for Vercel deployment (image optimization domains)
+- [X] T168 Test production build locally with `npm run build && npm start`
 - [ ] T169 Deploy to Vercel and verify all functionality works in production
 
 ### Security Hardening
 
-- [ ] T170 [P] Verify all sensitive data in .env.local (not committed)
+- [X] T170 [P] Verify all sensitive data in .env.local (not committed)
 - [ ] T171 [P] Verify RLS policies work correctly (public can't modify data)
 - [ ] T172 Verify admin routes redirect unauthenticated users
 - [ ] T173 Verify API routes validate authentication for mutations

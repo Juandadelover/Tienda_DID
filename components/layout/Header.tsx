@@ -37,7 +37,6 @@ export function Header() {
           
           {/* Cart Button */}
           <CartButton />
-          </Link>
         </div>
       </div>
     </header>

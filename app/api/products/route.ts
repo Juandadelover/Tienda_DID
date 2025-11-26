@@ -97,3 +97,73 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+/**
+ * POST /api/products
+ * Create a new product (admin only)
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const supabase = await createClient();
+
+    // Check authentication
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'No autorizado' },
+        { status: 401 }
+      );
+    }
+
+    const body = await request.json();
+    const { name, description, category_id, image_url, unit_type, has_variants, base_price } = body;
+
+    // Validate required fields
+    if (!name || !category_id || !unit_type) {
+      return NextResponse.json(
+        { error: 'Faltan campos requeridos: name, category_id, unit_type' },
+        { status: 400 }
+      );
+    }
+
+    // Validate base_price for products without variants
+    if (!has_variants && (base_price === undefined || base_price === null)) {
+      return NextResponse.json(
+        { error: 'El precio base es requerido para productos sin variantes' },
+        { status: 400 }
+      );
+    }
+
+    // Create product
+    const { data, error } = await supabase
+      .from('products')
+      .insert({
+        name,
+        description: description || null,
+        category_id,
+        image_url: image_url || null,
+        unit_type,
+        is_available: true,
+        has_variants: has_variants || false,
+        base_price: has_variants ? null : base_price,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating product:', error);
+      return NextResponse.json(
+        { error: 'Error al crear producto' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ product: data }, { status: 201 });
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    return NextResponse.json(
+      { error: 'Error interno del servidor' },
+      { status: 500 }
+    );
+  }
+}
