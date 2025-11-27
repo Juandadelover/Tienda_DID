@@ -43,8 +43,8 @@ export default function Home() {
     // Filter by search
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(p => 
-        p.name.toLowerCase().includes(query) || 
+      filtered = filtered.filter(p =>
+        p.name.toLowerCase().includes(query) ||
         (p.description && p.description.toLowerCase().includes(query))
       );
     }
@@ -88,7 +88,7 @@ export default function Home() {
           <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-white rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
           <div className="text-center space-y-3">
             {/* Badge */}
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/15 backdrop-blur-sm rounded-full text-xs font-medium">
@@ -133,15 +133,15 @@ export default function Home() {
         {/* Wave separator */}
         <div className="absolute bottom-0 left-0 right-0">
           <svg viewBox="0 0 1440 60" fill="none" className="w-full h-auto">
-            <path d="M0 60L80 52.5C160 45 320 30 480 22.5C640 15 800 15 960 20C1120 25 1280 35 1360 40L1440 45V60H0Z" fill="#f8fafc"/>
+            <path d="M0 60L80 52.5C160 45 320 30 480 22.5C640 15 800 15 960 20C1120 25 1280 35 1360 40L1440 45V60H0Z" fill="#f8fafc" />
           </svg>
         </div>
       </section>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 md:pt-40 pb-12 md:pb-16">
         {/* Search Bar */}
-        <div className="max-w-2xl mx-auto mb-8">
+        <div className="max-w-2xl mx-auto mb-10">
           <div className="relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
@@ -163,15 +163,14 @@ export default function Home() {
         </div>
 
         {/* Category Filter */}
-        <div className="mb-8">
+        <div className="mb-10">
           <div className="flex flex-wrap justify-center gap-2">
             <button
               onClick={() => setSelectedCategory(null)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                selectedCategory === null
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600'
-              }`}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selectedCategory === null
+                ? 'bg-emerald-600 text-white shadow-sm'
+                : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600'
+                }`}
             >
               Todos
             </button>
@@ -179,11 +178,10 @@ export default function Home() {
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.slug)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                  selectedCategory === cat.slug
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600'
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selectedCategory === cat.slug
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600'
+                  }`}
               >
                 {cat.name}
               </button>
@@ -206,13 +204,13 @@ export default function Home() {
                   <span className="font-semibold text-emerald-600">{filteredAndSortedProducts.length}</span>
                   {' '}{filteredAndSortedProducts.length === 1 ? 'producto' : 'productos'}
                 </span>
-                  
+
                 {selectedCategory && (
                   <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-50 text-emerald-700 rounded-md text-xs font-medium">
                     {categories.find(c => c.slug === selectedCategory)?.name}
                   </span>
                 )}
-                  
+
                 {searchQuery && (
                   <span className="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 text-slate-600 rounded-md text-xs">
                     &quot;{searchQuery}&quot;
@@ -235,22 +233,20 @@ export default function Home() {
                 <div className="flex items-center bg-slate-100 rounded-lg p-0.5">
                   <button
                     onClick={() => setViewMode('grid')}
-                    className={`p-1.5 rounded-md transition-colors ${
-                      viewMode === 'grid'
-                        ? 'bg-white text-emerald-600 shadow-sm'
-                        : 'text-slate-500 hover:text-slate-700'
-                    }`}
+                    className={`p-1.5 rounded-md transition-colors ${viewMode === 'grid'
+                      ? 'bg-white text-emerald-600 shadow-sm'
+                      : 'text-slate-500 hover:text-slate-700'
+                      }`}
                     title="Vista cuadrícula"
                   >
                     <Grid3x3 className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`p-1.5 rounded-md transition-colors ${
-                      viewMode === 'list'
-                        ? 'bg-white text-emerald-600 shadow-sm'
-                        : 'text-slate-500 hover:text-slate-700'
-                    }`}
+                    className={`p-1.5 rounded-md transition-colors ${viewMode === 'list'
+                      ? 'bg-white text-emerald-600 shadow-sm'
+                      : 'text-slate-500 hover:text-slate-700'
+                      }`}
                     title="Vista lista"
                   >
                     <List className="w-4 h-4" />
@@ -282,7 +278,7 @@ export default function Home() {
                 )}
               </div>
             ) : (
-              <div className={viewMode === 'grid' 
+              <div className={viewMode === 'grid'
                 ? 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4'
                 : 'space-y-3'
               }>

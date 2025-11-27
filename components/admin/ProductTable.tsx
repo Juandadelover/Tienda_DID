@@ -3,6 +3,7 @@
 /**
  * ProductTable Component
  * Admin product list with edit, delete, and availability toggle
+ * Mobile-first responsive design with card layout on mobile
  */
 
 import React, { useState } from 'react';
@@ -12,6 +13,15 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { formatCurrency } from '@/lib/utils/formatters';
+import { 
+  Pencil, 
+  Trash2, 
+  Package, 
+  Image as ImageIcon,
+  MoreVertical,
+  Eye,
+  EyeOff
+} from 'lucide-react';
 
 interface Variant {
   id: string;
@@ -43,6 +53,7 @@ export function ProductTable({ products, onRefresh }: ProductTableProps) {
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isTogglingId, setIsTogglingId] = useState<string | null>(null);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   const getProductPrice = (product: Product): string => {
     if (product.has_variants && product.variants.length > 0) {
@@ -59,6 +70,7 @@ export function ProductTable({ products, onRefresh }: ProductTableProps) {
 
   const handleToggleAvailability = async (product: Product) => {
     setIsTogglingId(product.id);
+    setOpenMenuId(null);
     
     try {
       const res = await fetch(`/api/products/${product.id}`, {
@@ -80,6 +92,7 @@ export function ProductTable({ products, onRefresh }: ProductTableProps) {
   const openDeleteModal = (product: Product) => {
     setProductToDelete(product);
     setDeleteModalOpen(true);
+    setOpenMenuId(null);
   };
 
   const handleDelete = async () => {
@@ -106,14 +119,17 @@ export function ProductTable({ products, onRefresh }: ProductTableProps) {
 
   if (products.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-        <svg className="w-16 h-16 mx-auto text-slate-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-        </svg>
-        <h3 className="text-lg font-medium text-slate-900 mb-2">No hay productos</h3>
-        <p className="text-slate-600 mb-4">Comienza agregando tu primer producto</p>
+      <div className="bg-white rounded-2xl shadow-sm p-8 sm:p-12 text-center border border-slate-100">
+        <div className="w-16 h-16 mx-auto bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
+          <Package className="w-8 h-8 text-slate-400" />
+        </div>
+        <h3 className="text-lg font-semibold text-slate-900 mb-2">No hay productos</h3>
+        <p className="text-slate-500 mb-6 max-w-sm mx-auto">Comienza agregando tu primer producto al catálogo</p>
         <Link href="/admin/productos/nuevo">
-          <Button>Agregar Producto</Button>
+          <Button className="inline-flex items-center gap-2">
+            <span>+</span>
+            Agregar Producto
+          </Button>
         </Link>
       </div>
     );
@@ -121,51 +137,167 @@ export function ProductTable({ products, onRefresh }: ProductTableProps) {
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      {/* Mobile Card Layout */}
+      <div className="lg:hidden space-y-3">
+        {products.map((product) => (
+          <div 
+            key={product.id} 
+            className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm hover:shadow-md transition-shadow"
+          >
+            <div className="flex gap-3">
+              {/* Product Image */}
+              <div className="shrink-0">
+                {product.image_url ? (
+                  <img
+                    src={product.image_url}
+                    alt={product.name}
+                    className="w-16 h-16 object-cover rounded-lg"
+                  />
+                ) : (
+                  <div className="w-16 h-16 bg-slate-100 rounded-lg flex items-center justify-center">
+                    <ImageIcon className="w-6 h-6 text-slate-400" />
+                  </div>
+                )}
+              </div>
+              
+              {/* Product Info */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-slate-900 truncate">{product.name}</h3>
+                    <p className="text-sm text-slate-500">{product.category_name}</p>
+                  </div>
+                  
+                  {/* Mobile Actions Menu */}
+                  <div className="relative">
+                    <button
+                      onClick={() => setOpenMenuId(openMenuId === product.id ? null : product.id)}
+                      className="w-9 h-9 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors"
+                    >
+                      <MoreVertical className="w-5 h-5" />
+                    </button>
+                    
+                    {openMenuId === product.id && (
+                      <>
+                        <div 
+                          className="fixed inset-0 z-10" 
+                          onClick={() => setOpenMenuId(null)}
+                        />
+                        <div className="absolute right-0 top-10 z-20 w-48 bg-white rounded-xl shadow-lg border border-slate-200 py-2 animate-scale-in">
+                          <Link
+                            href={`/admin/productos/${product.id}/editar`}
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                            onClick={() => setOpenMenuId(null)}
+                          >
+                            <Pencil className="w-4 h-4" />
+                            Editar
+                          </Link>
+                          <button
+                            onClick={() => handleToggleAvailability(product)}
+                            disabled={isTogglingId === product.id}
+                            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50"
+                          >
+                            {product.is_available ? (
+                              <>
+                                <EyeOff className="w-4 h-4" />
+                                Marcar agotado
+                              </>
+                            ) : (
+                              <>
+                                <Eye className="w-4 h-4" />
+                                Marcar disponible
+                              </>
+                            )}
+                          </button>
+                          <hr className="my-2 border-slate-100" />
+                          <button
+                            onClick={() => openDeleteModal(product)}
+                            className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            Eliminar
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Price and Status Row */}
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
+                  <span className="font-bold text-slate-900">{getProductPrice(product)}</span>
+                  <button
+                    onClick={() => handleToggleAvailability(product)}
+                    disabled={isTogglingId === product.id}
+                    className="focus:outline-none active:scale-95 transition-transform"
+                  >
+                    <Badge 
+                      variant={product.is_available ? 'success' : 'error'}
+                      className="text-xs px-2.5 py-1"
+                    >
+                      {isTogglingId === product.id ? '...' : (product.is_available ? 'Disponible' : 'Agotado')}
+                    </Badge>
+                  </button>
+                </div>
+                
+                {product.has_variants && product.variants.length > 0 && (
+                  <p className="text-xs text-slate-400 mt-2">
+                    {product.variants.length} variante{product.variants.length !== 1 ? 's' : ''}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop Table Layout */}
+      <div className="hidden lg:block bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+            <thead>
+              <tr className="bg-slate-50/80 border-b border-slate-200">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
                   Producto
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
                   Categoría
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
                   Precio
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-center text-xs font-semibold text-slate-600 uppercase tracking-wider">
                   Estado
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                <th className="px-6 py-4 text-right text-xs font-semibold text-slate-600 uppercase tracking-wider">
                   Acciones
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
-              {products.map((product) => (
-                <tr key={product.id} className="hover:bg-slate-50">
+            <tbody className="divide-y divide-slate-100">
+              {products.map((product, index) => (
+                <tr 
+                  key={product.id} 
+                  className={`hover:bg-slate-50/50 transition-colors ${index % 2 === 0 ? 'bg-white' : 'bg-slate-50/30'}`}
+                >
                   {/* Product Info */}
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-4">
                       {product.image_url ? (
                         <img
                           src={product.image_url}
                           alt={product.name}
-                          className="w-12 h-12 object-cover rounded-lg"
+                          className="w-12 h-12 object-cover rounded-lg ring-1 ring-slate-200"
                         />
                       ) : (
-                        <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
-                          <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
+                        <div className="w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center ring-1 ring-slate-200">
+                          <ImageIcon className="w-5 h-5 text-slate-400" />
                         </div>
                       )}
-                      <div>
-                        <p className="font-medium text-slate-900">{product.name}</p>
+                      <div className="min-w-0">
+                        <p className="font-medium text-slate-900 truncate max-w-[200px]">{product.name}</p>
                         {product.has_variants && (
-                          <p className="text-xs text-slate-500">
+                          <p className="text-xs text-slate-400 mt-0.5">
                             {product.variants.length} variante{product.variants.length !== 1 ? 's' : ''}
                           </p>
                         )}
@@ -175,48 +307,48 @@ export function ProductTable({ products, onRefresh }: ProductTableProps) {
 
                   {/* Category */}
                   <td className="px-6 py-4">
-                    <span className="text-sm text-slate-600">{product.category_name}</span>
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-slate-100 text-sm text-slate-600 font-medium">
+                      {product.category_name}
+                    </span>
                   </td>
 
                   {/* Price */}
                   <td className="px-6 py-4">
-                    <span className="text-sm font-medium text-slate-900">
+                    <span className="text-sm font-bold text-slate-900">
                       {getProductPrice(product)}
                     </span>
                   </td>
 
                   {/* Status */}
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-center">
                     <button
                       onClick={() => handleToggleAvailability(product)}
                       disabled={isTogglingId === product.id}
-                      className="focus:outline-none"
+                      className="focus:outline-none hover:scale-105 active:scale-95 transition-transform inline-block"
                     >
-                      <Badge variant={product.is_available ? 'success' : 'error'}>
+                      <Badge 
+                        variant={product.is_available ? 'success' : 'error'}
+                        className="text-xs px-3 py-1.5 font-medium"
+                      >
                         {isTogglingId === product.id ? '...' : (product.is_available ? 'Disponible' : 'Agotado')}
                       </Badge>
                     </button>
                   </td>
 
                   {/* Actions */}
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
+                  <td className="px-6 py-4">
+                    <div className="flex items-center justify-end gap-1">
                       <Link href={`/admin/productos/${product.id}/editar`}>
-                        <Button variant="ghost" className="p-2">
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                          </svg>
-                        </Button>
+                        <button className="w-9 h-9 flex items-center justify-center rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                          <Pencil className="w-4 h-4" />
+                        </button>
                       </Link>
-                      <Button
-                        variant="ghost"
+                      <button
                         onClick={() => openDeleteModal(product)}
-                        className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                        className="w-9 h-9 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </Button>
+                        <Trash2 className="w-4 h-4" />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -233,11 +365,20 @@ export function ProductTable({ products, onRefresh }: ProductTableProps) {
         title="Eliminar Producto"
       >
         <div className="space-y-4">
-          <p className="text-slate-600">
-            ¿Estás seguro de que deseas eliminar <strong>{productToDelete?.name}</strong>?
-            Esta acción no se puede deshacer.
-          </p>
-          <div className="flex justify-end gap-3">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center shrink-0">
+              <Trash2 className="w-6 h-6 text-red-600" />
+            </div>
+            <div>
+              <p className="text-slate-900 font-medium">
+                ¿Eliminar "{productToDelete?.name}"?
+              </p>
+              <p className="text-slate-500 text-sm mt-1">
+                Esta acción no se puede deshacer. El producto será eliminado permanentemente.
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-end gap-3 pt-2">
             <Button
               variant="ghost"
               onClick={() => setDeleteModalOpen(false)}
@@ -249,6 +390,7 @@ export function ProductTable({ products, onRefresh }: ProductTableProps) {
               variant="danger"
               onClick={handleDelete}
               disabled={isDeleting}
+              className="bg-red-600 hover:bg-red-700"
             >
               {isDeleting ? 'Eliminando...' : 'Eliminar'}
             </Button>

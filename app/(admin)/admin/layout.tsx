@@ -65,13 +65,13 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-100">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-slate-100">
+      {/* Sidebar - includes mobile header and menu */}
       <AdminNav />
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
-        <div className="p-6 lg:p-8">
+      <main className="md:ml-72 min-h-screen">
+        <div className="pt-2 md:pt-0">
           {children}
         </div>
       </main>

@@ -58,96 +58,124 @@ export default function LoginPage() {
 
   if (isCheckingSession) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-100">
-        <Spinner />
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <Spinner className="w-8 h-8 text-emerald-600" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100 px-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 relative overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-emerald-100/40 via-slate-50 to-slate-50"></div>
+        <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-emerald-200/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-[-10%] left-[-5%] w-96 h-96 bg-teal-200/20 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="w-full max-w-md relative z-10 px-4">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-emerald-600 mb-2">
-            {STORE_INFO.name}
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-lg mb-6 transform rotate-3 hover:rotate-6 transition-transform duration-300">
+            <span className="text-3xl font-bold text-white">TD</span>
+          </div>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">
+            Bienvenido de nuevo
           </h1>
-          <p className="text-slate-600">Panel de Administración</p>
+          <p className="text-slate-500">
+            Ingresa a tu panel de administración
+          </p>
         </div>
 
-        {/* Login Form */}
-        <div className="bg-white rounded-lg shadow-md p-8">
-          <h2 className="text-xl font-semibold text-slate-900 mb-6 text-center">
-            Iniciar Sesión
-          </h2>
-
-          <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Login Card */}
+        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/50 p-8">
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Error Message */}
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+              <div className="bg-red-50/80 backdrop-blur-sm border border-red-100 text-red-600 px-4 py-3 rounded-xl text-sm flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500 flex-shrink-0" />
                 {error}
               </div>
             )}
 
-            {/* Email Field */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
-                Correo electrónico
-              </label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@tiendadid.com"
-                disabled={isLoading}
-                autoComplete="email"
-                className="w-full"
-              />
-            </div>
+            <div className="space-y-4">
+              {/* Email Field */}
+              <div className="space-y-1.5">
+                <label htmlFor="email" className="block text-sm font-medium text-slate-700 ml-1">
+                  Correo electrónico
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg className="h-5 w-5 text-slate-400 group-focus-within:text-emerald-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                    </svg>
+                  </div>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="admin@tiendadid.com"
+                    disabled={isLoading}
+                    autoComplete="email"
+                    className="!pl-11 w-full bg-slate-50/50 border-slate-200 focus:bg-white transition-all duration-200"
+                  />
+                </div>
+              </div>
 
-            {/* Password Field */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
-                Contraseña
-              </label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                disabled={isLoading}
-                autoComplete="current-password"
-                className="w-full"
-              />
+              {/* Password Field */}
+              <div className="space-y-1.5">
+                <label htmlFor="password" className="block text-sm font-medium text-slate-700 ml-1">
+                  Contraseña
+                </label>
+                <div className="relative group">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg className="h-5 w-5 text-slate-400 group-focus-within:text-emerald-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    disabled={isLoading}
+                    autoComplete="current-password"
+                    className="!pl-11 w-full bg-slate-50/50 border-slate-200 focus:bg-white transition-all duration-200"
+                  />
+                </div>
+              </div>
             </div>
 
             {/* Submit Button */}
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-medium"
+              className="w-full py-6 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold rounded-xl shadow-lg shadow-emerald-600/20 hover:shadow-emerald-600/30 transition-all duration-200 transform hover:-translate-y-0.5"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <Spinner />
+                  <Spinner className="text-white" />
                   Iniciando sesión...
                 </span>
               ) : (
-                'Iniciar Sesión'
+                'Ingresar al Panel'
               )}
             </Button>
           </form>
         </div>
 
-        {/* Back to store link */}
-        <div className="text-center mt-6">
+        {/* Footer */}
+        <div className="text-center mt-8">
           <a
             href="/"
-            className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
+            className="inline-flex items-center gap-2 text-slate-500 hover:text-emerald-600 transition-colors text-sm font-medium group"
           >
-            ← Volver a la tienda
+            <svg className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Volver a la tienda
           </a>
         </div>
       </div>

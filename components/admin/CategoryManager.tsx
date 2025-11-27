@@ -3,6 +3,7 @@
 /**
  * CategoryManager Component
  * CRUD interface for managing product categories
+ * Modernized UI with premium table design
  */
 
 import React, { useState, useEffect } from 'react';
@@ -11,6 +12,15 @@ import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { Spinner } from '@/components/ui/Spinner';
 import { Badge } from '@/components/ui/Badge';
+import {
+  Pencil,
+  Trash2,
+  Plus,
+  FolderTree,
+  Search,
+  AlertTriangle,
+  Package
+} from 'lucide-react';
 
 interface Category {
   id: string;
@@ -38,6 +48,9 @@ export function CategoryManager() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
+
   // Fetch categories
   const fetchCategories = async () => {
     setIsLoading(true);
@@ -63,6 +76,12 @@ export function CategoryManager() {
   useEffect(() => {
     fetchCategories();
   }, []);
+
+  // Filter categories
+  const filteredCategories = categories.filter(cat =>
+    cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    cat.slug.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   // Open form for creating new category
   const openCreateForm = () => {
@@ -109,8 +128,8 @@ export function CategoryManager() {
 
     try {
       const isEditing = !!editingCategory;
-      const url = isEditing 
-        ? `/api/categories/${editingCategory.id}` 
+      const url = isEditing
+        ? `/api/categories/${editingCategory.id}`
         : '/api/categories';
       const method = isEditing ? 'PATCH' : 'POST';
 
@@ -182,7 +201,7 @@ export function CategoryManager() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Spinner size="lg" />
+        <Spinner size="lg" className="text-emerald-600" />
       </div>
     );
   }
@@ -190,13 +209,16 @@ export function CategoryManager() {
   // Render error state
   if (error) {
     return (
-      <div className="bg-red-50 text-red-700 p-4 rounded-lg">
-        <p className="font-medium">Error al cargar categorías</p>
-        <p className="text-sm mt-1">{error}</p>
-        <Button 
-          variant="secondary" 
-          onClick={fetchCategories} 
-          className="mt-3"
+      <div className="bg-red-50 border border-red-100 text-red-700 p-6 rounded-xl shadow-sm">
+        <div className="flex items-center gap-3 mb-2">
+          <AlertTriangle className="w-5 h-5" />
+          <h3 className="font-semibold">Error al cargar categorías</h3>
+        </div>
+        <p className="text-sm mb-4">{error}</p>
+        <Button
+          variant="secondary"
+          onClick={fetchCategories}
+          className="bg-white border-red-200 hover:bg-red-50 text-red-700"
         >
           Reintentar
         </Button>
@@ -205,124 +227,119 @@ export function CategoryManager() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-slate-900">
-          Categorías ({categories.length})
-        </h2>
-        <Button onClick={openCreateForm}>
-          <svg 
-            className="w-4 h-4 mr-2" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M12 4v16m8-8H4" 
+    <div className="space-y-6 animate-fade-in">
+      {/* Header & Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-purple-50 text-purple-600 rounded-lg">
+            <FolderTree className="w-5 h-5" />
+          </div>
+          <div>
+            <h2 className="font-bold text-slate-900">Categorías</h2>
+            <p className="text-xs text-slate-500">{categories.length} total</p>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <input
+              type="text"
+              placeholder="Buscar..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full sm:w-64 pl-9 pr-4 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
             />
-          </svg>
-          Nueva Categoría
-        </Button>
+          </div>
+          <Button onClick={openCreateForm} className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-200">
+            <Plus className="w-4 h-4 mr-2" />
+            Nueva Categoría
+          </Button>
+        </div>
       </div>
 
       {/* Categories Table */}
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="min-w-full divide-y divide-slate-200">
-          <thead className="bg-slate-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Nombre
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Slug
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Productos
-              </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
-                Acciones
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-slate-200">
-            {categories.length === 0 ? (
+      <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-100">
+            <thead className="bg-slate-50/80">
               <tr>
-                <td colSpan={4} className="px-6 py-12 text-center text-slate-500">
-                  No hay categorías. Crea la primera.
-                </td>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  Nombre
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  Slug
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  Productos
+                </th>
+                <th className="px-6 py-4 text-right text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                  Acciones
+                </th>
               </tr>
-            ) : (
-              categories.map((category) => (
-                <tr key={category.id} className="hover:bg-slate-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="font-medium text-slate-900">
-                      {category.name}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <code className="text-sm text-slate-600 bg-slate-100 px-2 py-1 rounded">
-                      {category.slug}
-                    </code>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <Badge variant={category.product_count > 0 ? 'default' : 'agotado'}>
-                      {category.product_count} producto{category.product_count !== 1 ? 's' : ''}
-                    </Badge>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => openEditForm(category)}
-                        aria-label={`Editar ${category.name}`}
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                          />
-                        </svg>
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => openDeleteModal(category)}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                        aria-label={`Eliminar ${category.name}`}
-                      >
-                        <svg
-                          className="w-4 h-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                          />
-                        </svg>
-                      </Button>
+            </thead>
+            <tbody className="bg-white divide-y divide-slate-100">
+              {filteredCategories.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-6 py-16 text-center text-slate-500">
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mb-2">
+                        <Search className="w-6 h-6 text-slate-300" />
+                      </div>
+                      <p className="font-medium text-slate-900">No se encontraron categorías</p>
+                      <p className="text-sm">Intenta con otra búsqueda o crea una nueva</p>
                     </div>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                filteredCategories.map((category) => (
+                  <tr key={category.id} className="hover:bg-slate-50/50 transition-colors group">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="font-medium text-slate-900 group-hover:text-emerald-700 transition-colors">
+                        {category.name}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <code className="text-xs font-mono text-slate-500 bg-slate-100 px-2 py-1 rounded border border-slate-200">
+                        {category.slug}
+                      </code>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <Package className="w-4 h-4 text-slate-400" />
+                        <span className={`text-sm font-medium ${category.product_count > 0 ? 'text-slate-700' : 'text-slate-400'}`}>
+                          {category.product_count}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right">
+                      <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openEditForm(category)}
+                          className="h-8 w-8 p-0 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg"
+                          title="Editar"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => openDeleteModal(category)}
+                          className="h-8 w-8 p-0 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg"
+                          title="Eliminar"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Create/Edit Form Modal */}
@@ -331,35 +348,51 @@ export function CategoryManager() {
         onClose={closeForm}
         title={editingCategory ? 'Editar Categoría' : 'Nueva Categoría'}
       >
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            label="Nombre de la categoría"
-            value={formName}
-            onChange={(e) => setFormName(e.target.value)}
-            placeholder="Ej: Productos de limpieza"
-            maxLength={100}
-            required
-            autoFocus
-            error={formError || undefined}
-          />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-4">
+            <Input
+              label="Nombre de la categoría"
+              value={formName}
+              onChange={(e) => setFormName(e.target.value)}
+              placeholder="Ej: Productos de limpieza"
+              maxLength={100}
+              required
+              autoFocus
+              error={formError || undefined}
+              className="text-lg"
+            />
 
-          <p className="text-sm text-slate-500">
-            El slug se generará automáticamente a partir del nombre.
-          </p>
+            <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 flex gap-3">
+              <div className="mt-0.5">
+                <FolderTree className="w-5 h-5 text-blue-500" />
+              </div>
+              <div className="text-sm text-blue-700">
+                <p className="font-medium mb-1">Información del Slug</p>
+                <p className="opacity-90">
+                  El slug se generará automáticamente a partir del nombre y se usará en la URL de la tienda.
+                </p>
+              </div>
+            </div>
+          </div>
 
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex justify-end gap-3 pt-2">
             <Button
               type="button"
               variant="secondary"
               onClick={closeForm}
               disabled={isSaving}
+              className="hover:bg-slate-100"
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSaving}>
+            <Button
+              type="submit"
+              disabled={isSaving}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white min-w-[120px]"
+            >
               {isSaving ? (
                 <>
-                  <Spinner size="sm" className="mr-2" />
+                  <Spinner size="sm" className="mr-2 text-white" />
                   Guardando...
                 </>
               ) : editingCategory ? (
@@ -378,32 +411,35 @@ export function CategoryManager() {
         onClose={closeDeleteModal}
         title="Eliminar Categoría"
       >
-        <div className="space-y-4">
-          <p className="text-slate-600">
-            ¿Estás seguro de que deseas eliminar la categoría{' '}
-            <strong className="text-slate-900">
-              "{categoryToDelete?.name}"
-            </strong>
-            ?
-          </p>
+        <div className="space-y-6">
+          <div className="flex items-start gap-4 bg-red-50 p-4 rounded-xl border border-red-100">
+            <div className="p-2 bg-red-100 rounded-full text-red-600">
+              <AlertTriangle className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-semibold text-red-900 mb-1">Confirmar eliminación</h4>
+              <p className="text-red-700 text-sm">
+                ¿Estás seguro de que deseas eliminar la categoría <strong className="text-red-900">"{categoryToDelete?.name}"</strong>? Esta acción no se puede deshacer.
+              </p>
+            </div>
+          </div>
 
           {categoryToDelete && categoryToDelete.product_count > 0 && (
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0" />
               <p className="text-amber-800 text-sm">
-                <strong>⚠️ Advertencia:</strong> Esta categoría tiene{' '}
-                {categoryToDelete.product_count} producto(s) asociado(s).
-                Debes mover o eliminar los productos antes de eliminar la categoría.
+                <strong>No se puede eliminar:</strong> Esta categoría tiene <strong>{categoryToDelete.product_count} productos</strong> asociados. Debes mover o eliminar los productos antes de eliminar la categoría.
               </p>
             </div>
           )}
 
           {deleteError && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-              <p className="text-red-700 text-sm">{deleteError}</p>
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm">
+              {deleteError}
             </div>
           )}
 
-          <div className="flex justify-end gap-3 pt-4">
+          <div className="flex justify-end gap-3 pt-2">
             <Button
               type="button"
               variant="secondary"
@@ -417,14 +453,15 @@ export function CategoryManager() {
               variant="danger"
               onClick={handleDelete}
               disabled={isDeleting || (categoryToDelete?.product_count || 0) > 0}
+              className="bg-red-600 hover:bg-red-700 text-white"
             >
               {isDeleting ? (
                 <>
-                  <Spinner size="sm" className="mr-2" />
+                  <Spinner size="sm" className="mr-2 text-white" />
                   Eliminando...
                 </>
               ) : (
-                'Eliminar'
+                'Sí, eliminar'
               )}
             </Button>
           </div>
