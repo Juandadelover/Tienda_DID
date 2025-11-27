@@ -16,53 +16,50 @@ export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-sm border-b border-slate-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-              onClick={() => setIsMenuOpen(true)}
-              aria-label="Abrir menú"
-              aria-expanded={isMenuOpen}
-              aria-controls="mobile-menu"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
+    <header className="sticky top-0 z-40 w-full bg-white border-b border-slate-200">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
+        {/* Left side */}
+        <div className="flex items-center gap-2">
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden p-2 -ml-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+            onClick={() => setIsMenuOpen(true)}
+            aria-label="Abrir menú"
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
 
-            {/* Logo */}
-            <Link 
-              href="/" 
-              className="flex items-center gap-3 hover:opacity-90 transition-opacity"
-              aria-label={`Ir al inicio de ${STORE_INFO.name}`}
-            >
-              <Image
-                src="/images/logo.svg"
-                alt={STORE_INFO.name}
-                width={40}
-                height={40}
-                priority
-              />
-              <div className="flex flex-col">
-                <span className="text-xl font-bold text-primary">
-                  {STORE_INFO.name}
-                </span>
-                <span className="text-xs text-gray-600 hidden sm:block">
-                  Tu tienda de confianza
-                </span>
-              </div>
-            </Link>
-          </div>
+          {/* Logo */}
+          <Link 
+            href="/" 
+            className="flex items-center gap-2 hover:opacity-90 transition-opacity"
+            aria-label={`Ir al inicio de ${STORE_INFO.name}`}
+          >
+            <Image
+              src="/images/logo.svg"
+              alt={STORE_INFO.name}
+              width={32}
+              height={32}
+              priority
+            />
+            <span className="text-lg font-bold text-emerald-600">
+              {STORE_INFO.name}
+            </span>
+          </Link>
+        </div>
 
+        {/* Right side */}
+        <div className="flex items-center gap-4">
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-6 mr-6" role="navigation" aria-label="Menú principal">
-            <Link href="/" className="text-sm font-medium text-gray-700 hover:text-primary transition-colors">
+          <nav className="hidden md:flex items-center gap-4" role="navigation" aria-label="Menú principal">
+            <Link href="/" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors">
               Inicio
             </Link>
-            <Link href="/admin" className="text-sm font-medium text-gray-700 hover:text-primary transition-colors">
+            <Link href="/admin" className="text-sm text-slate-600 hover:text-emerald-600 transition-colors">
               Admin
             </Link>
           </nav>

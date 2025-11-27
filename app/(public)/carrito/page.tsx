@@ -37,12 +37,12 @@ export default function CartPage() {
   }
 
   return (
-    <div className="py-8 md:py-12 lg:py-16 animate-fade-in">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
         {/* Header */}
-        <div className="mb-8 md:mb-10">
+        <div className="mb-6">
           <Link
             href="/"
-            className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-emerald-600 transition-colors mb-6 group"
+            className="inline-flex items-center text-sm text-slate-500 hover:text-emerald-600 transition-colors mb-4 group"
           >
             <svg
               className="w-4 h-4 mr-1 transition-transform group-hover:-translate-x-1"
@@ -55,20 +55,20 @@ export default function CartPage() {
             Seguir comprando
           </Link>
 
-          <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4">
-            <h1 className="text-3xl md:text-4xl font-bold text-slate-900">
-              Carrito de compras
+          <div className="flex items-baseline gap-2">
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900">
+              Tu Carrito
             </h1>
-            <span className="text-lg text-slate-500">
+            <span className="text-sm text-slate-500">
               ({cart.itemCount} {cart.itemCount === 1 ? 'producto' : 'productos'})
             </span>
           </div>
         </div>
 
         {/* Cart content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-start">
           {/* Cart items */}
-          <div className="lg:col-span-2 space-y-5">
+          <div className="lg:col-span-2 space-y-4">
             {cart.items.map((item) => (
               <CartItem
                 key={`${item.productId}-${item.variantId || 'no-variant'}`}
