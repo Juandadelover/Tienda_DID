@@ -81,7 +81,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section - Más compacto y limpio */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white">
+      <section className="relative overflow-hidden bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 text-white pb-24 md:pb-28">
         {/* Efectos de fondo sutiles */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-1/4 w-64 h-64 bg-white rounded-full blur-3xl"></div>
@@ -130,31 +130,31 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Wave separator */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 60" fill="none" className="w-full h-auto">
-            <path d="M0 60L80 52.5C160 45 320 30 480 22.5C640 15 800 15 960 20C1120 25 1280 35 1360 40L1440 45V60H0Z" fill="#f8fafc" />
+        {/* Wave separator - más grande para mejor separación */}
+        <div className="absolute -bottom-1 left-0 right-0">
+          <svg viewBox="0 0 1440 120" fill="none" preserveAspectRatio="none" className="w-full h-20 md:h-24">
+            <path d="M0 120L80 100C160 80 320 60 480 50C640 40 800 40 960 50C1120 60 1280 80 1360 90L1440 100V120H0Z" fill="#f8fafc" />
           </svg>
         </div>
       </section>
 
       {/* Main Content */}
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 md:pt-40 pb-12 md:pb-16">
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12 md:pt-8 md:pb-16">
         {/* Search Bar */}
-        <div className="max-w-2xl mx-auto mb-10">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+        <div className="max-w-2xl mx-auto mb-8">
+          <div className="relative group">
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-emerald-600 transition-colors duration-300" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Buscar productos..."
-              className="w-full pl-12 pr-10 py-3 text-sm border border-slate-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 transition-all bg-white shadow-sm"
+              className="w-full pl-16 pr-12 py-4 text-base border-2 border-slate-100 rounded-2xl focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all duration-300 bg-white shadow-sm hover:shadow-md hover:border-emerald-200 placeholder:text-slate-400"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 transition-colors"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all"
               >
                 <X className="w-4 h-4" />
               </button>
