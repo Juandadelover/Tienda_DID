@@ -69,11 +69,9 @@ export default function AdminLayout({
       {/* Sidebar - includes mobile header and menu */}
       <AdminNav />
 
-      {/* Main Content */}
-      <main className="md:ml-72 min-h-screen">
-        <div className="pt-2 md:pt-0">
-          {children}
-        </div>
+      {/* Main Content - pt-20 accounts for fixed mobile header (h-16 + spacing) */}
+      <main className="pt-20 md:pt-0 md:ml-72 min-h-screen">
+        {children}
       </main>
     </div>
   );
