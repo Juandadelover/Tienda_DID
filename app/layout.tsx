@@ -18,6 +18,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  userScalable: true,
   themeColor: "#059669",
 };
 
@@ -29,6 +30,12 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="antialiased">
+        <a 
+          href="#main-content" 
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-emerald-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+        >
+          Saltar al contenido principal
+        </a>
         {children}
       </body>
     </html>

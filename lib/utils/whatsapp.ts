@@ -15,7 +15,7 @@ export const WHATSAPP_CONFIG = {
 
 export interface WhatsAppOrderData {
   customerName: string;
-  customerPhone: string;
+  customerPhone?: string;
   deliveryType: 'pickup' | 'delivery';
   address?: string;
   notes?: string;
@@ -69,11 +69,13 @@ export function generateWhatsAppMessage(order: WhatsAppOrderData): string {
     : '';
 
   // Build complete message per RF-11 format
+  const phoneLine = order.customerPhone ? `
+📱 *Teléfono:* ${order.customerPhone}` : '';
+  
   const message = `
 🛒 *NUEVO PEDIDO - ${WHATSAPP_CONFIG.storeName.toUpperCase()}*
 
-👤 *Cliente:* ${order.customerName}
-📱 *Teléfono:* ${order.customerPhone}
+👤 *Cliente:* ${order.customerName}${phoneLine}
 
 📦 *PRODUCTOS:*
 ${itemsText}

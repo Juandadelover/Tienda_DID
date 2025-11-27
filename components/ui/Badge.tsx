@@ -14,18 +14,18 @@ export interface BadgeProps {
 }
 
 export function Badge({ variant = 'default', children, className = '' }: BadgeProps) {
-  // Base styles
-  const baseStyles = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium';
+  // Base styles - Responsive sizing with touch-friendly padding
+  const baseStyles = 'inline-flex items-center px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-colors duration-150';
   
-  // Variant styles
+  // Variant styles - Enhanced contrast for WCAG AA compliance
   const variantStyles: Record<BadgeVariant, string> = {
-    disponible: 'bg-green-100 text-green-800',
+    disponible: 'bg-[#065f46] text-white',
     agotado: 'bg-red-100 text-red-800',
     nuevo: 'bg-blue-100 text-blue-800',
     default: 'bg-gray-100 text-gray-800',
-    success: 'bg-green-100 text-green-800',
+    success: 'bg-[#065f46] text-white',
     error: 'bg-red-100 text-red-800',
-    warning: 'bg-amber-100 text-amber-800',
+    warning: 'bg-[#a16207] text-white',
     info: 'bg-blue-100 text-blue-800',
   };
   

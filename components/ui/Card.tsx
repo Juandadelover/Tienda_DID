@@ -18,22 +18,22 @@ export function Card({
   children,
   ...props
 }: CardProps) {
-  // Base styles
-  const baseStyles = 'bg-white rounded-lg';
+  // Base styles - Enhanced with hover animation
+  const baseStyles = 'bg-white rounded-lg transition-all duration-150 ease-out hover:shadow-lg';
   
   // Variant styles
   const variantStyles = {
-    default: 'shadow-sm border border-gray-200',
-    elevated: 'shadow-md',
-    bordered: 'border-2 border-gray-300',
+    default: 'shadow-sm border border-gray-200 hover:border-gray-300',
+    elevated: 'shadow-md hover:shadow-xl hover:scale-[1.02]',
+    bordered: 'border-2 border-gray-300 hover:border-gray-400',
   };
   
-  // Padding styles
+  // Padding styles - Responsive
   const paddingStyles = {
     none: '',
-    sm: 'p-3',
-    md: 'p-4',
-    lg: 'p-6',
+    sm: 'p-3 sm:p-4',
+    md: 'p-4 sm:p-5 md:p-6',
+    lg: 'p-5 sm:p-6 md:p-8',
   };
   
   // Combine classes

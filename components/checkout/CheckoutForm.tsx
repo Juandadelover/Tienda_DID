@@ -18,9 +18,6 @@ const checkoutFormSchema = z.object({
     .max(100, 'El nombre es muy largo')
     .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, 'El nombre solo puede contener letras y espacios'),
   
-  customerPhone: z.string()
-    .regex(/^3[0-9]{9}$/, 'Número de celular inválido (debe iniciar con 3 y tener 10 dígitos)'),
-  
   deliveryType: z.enum(['delivery', 'pickup'] as const),
   
   address: z.string().optional(),
@@ -47,7 +44,6 @@ interface CheckoutFormProps {
 export function CheckoutForm({ onSubmit, isLoading = false }: CheckoutFormProps) {
   const [formData, setFormData] = useState<CheckoutFormData>({
     customerName: '',
-    customerPhone: '',
     deliveryType: 'pickup',
     address: '',
     notes: '',
@@ -111,7 +107,6 @@ export function CheckoutForm({ onSubmit, isLoading = false }: CheckoutFormProps)
     // Mark all fields as touched
     setTouched({
       customerName: true,
-      customerPhone: true,
       deliveryType: true,
       address: true,
       notes: true,
@@ -151,28 +146,6 @@ export function CheckoutForm({ onSubmit, isLoading = false }: CheckoutFormProps)
           error={touched.customerName ? errors.customerName : undefined}
           className="w-full"
         />
-      </div>
-
-      {/* Customer Phone */}
-      <div>
-        <label htmlFor="customerPhone" className="block text-sm font-medium text-slate-700 mb-2">
-          Número de celular *
-        </label>
-        <Input
-          id="customerPhone"
-          type="tel"
-          value={formData.customerPhone}
-          onChange={(e) => handleChange('customerPhone', e.target.value)}
-          onBlur={() => handleBlur('customerPhone')}
-          placeholder="3001234567"
-          disabled={isLoading}
-          error={touched.customerPhone ? errors.customerPhone : undefined}
-          className="w-full"
-          maxLength={10}
-        />
-        <p className="text-xs text-slate-500 mt-1">
-          10 dígitos, debe iniciar con 3
-        </p>
       </div>
 
       {/* Delivery Type */}

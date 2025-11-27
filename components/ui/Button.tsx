@@ -23,22 +23,22 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
-  // Base styles (always applied)
-  const baseStyles = 'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+  // Base styles (always applied) - Enhanced with Motion Frame and hover animations
+  const baseStyles = 'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 hover:scale-[1.02]';
   
-  // Variant styles
+  // Variant styles - Fixed color contrast for WCAG AA compliance
   const variantStyles = {
-    primary: 'bg-primary text-white hover:bg-primary/90 focus-visible:ring-primary',
-    secondary: 'bg-secondary text-white hover:bg-secondary/90 focus-visible:ring-secondary',
-    danger: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600',
-    ghost: 'bg-transparent text-primary hover:bg-primary/10 focus-visible:ring-primary',
+    primary: 'bg-[#047857] text-white hover:bg-[#065f46] hover:shadow-lg focus-visible:ring-[#047857]',
+    secondary: 'bg-secondary text-white hover:bg-secondary/90 hover:shadow-lg focus-visible:ring-secondary',
+    danger: 'bg-[#dc2626] text-white hover:bg-[#b91c1c] hover:shadow-lg focus-visible:ring-[#dc2626]',
+    ghost: 'bg-transparent text-[#047857] hover:bg-[#047857]/10 focus-visible:ring-[#047857]',
   };
   
-  // Size styles (44px minimum touch target for mobile)
+  // Size styles - Responsive padding with 44px minimum touch target
   const sizeStyles = {
-    sm: 'px-3 py-2 text-sm min-h-[44px]',
-    md: 'px-4 py-3 text-base min-h-[44px]',
-    lg: 'px-6 py-4 text-lg min-h-[44px]',
+    sm: 'px-3 sm:px-4 py-2 text-sm sm:text-base min-h-[44px]',
+    md: 'px-4 sm:px-5 py-3 text-base min-h-[44px]',
+    lg: 'px-5 sm:px-6 py-3 sm:py-4 text-base sm:text-lg min-h-[44px]',
   };
   
   // Full width
@@ -51,6 +51,7 @@ export function Button({
     <button
       className={buttonClasses}
       disabled={disabled || loading}
+      aria-busy={loading}
       {...props}
     >
       {loading && (

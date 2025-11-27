@@ -19,7 +19,7 @@ export default function CartPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-16">
+      <div className="py-16">
         <div className="flex flex-col items-center justify-center">
           <Spinner />
           <p className="mt-4 text-slate-600">Cargando carrito...</p>
@@ -30,77 +30,75 @@ export default function CartPage() {
 
   if (cart.items.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-8 md:py-12">
+      <div className="py-12 md:py-16">
         <EmptyCart />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 md:py-8">
-      {/* Header */}
-      <div className="mb-6 md:mb-8">
-        <Link
-          href="/"
-          className="inline-flex items-center text-emerald-600 hover:text-emerald-700 mb-4"
-        >
-          <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Seguir comprando
-        </Link>
-        
-        <h1 className="text-3xl md:text-4xl font-bold text-slate-900">
-          Carrito de compras
-        </h1>
-        <p className="text-slate-600 mt-2">
-          {cart.itemCount} {cart.itemCount === 1 ? 'producto' : 'productos'} en tu carrito
-        </p>
-      </div>
+    <div className="py-8 md:py-12 lg:py-16 animate-fade-in">
+        {/* Header */}
+        <div className="mb-8 md:mb-10">
+          <Link
+            href="/"
+            className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-emerald-600 transition-colors mb-6 group"
+          >
+            <svg
+              className="w-4 h-4 mr-1 transition-transform group-hover:-translate-x-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Seguir comprando
+          </Link>
 
-      {/* Cart content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-        {/* Cart items */}
-        <div className="lg:col-span-2 space-y-4">
-          {cart.items.map((item) => (
-            <CartItem
-              key={`${item.productId}-${item.variantId || 'no-variant'}`}
-              item={item}
-              onUpdateQuantity={(quantity) =>
-                updateQuantity({
-                  productId: item.productId,
-                  variantId: item.variantId,
-                  quantity,
-                })
-              }
-              onRemove={() =>
-                removeItem({
-                  productId: item.productId,
-                  variantId: item.variantId,
-                })
-              }
-            />
-          ))}
-
-          {/* Continue shopping button - mobile */}
-          <div className="lg:hidden pt-4">
-            <Link href="/">
-              <Button variant="ghost" className="w-full">
-                Seguir comprando
-              </Button>
-            </Link>
+          <div className="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900">
+              Carrito de compras
+            </h1>
+            <span className="text-lg text-slate-500">
+              ({cart.itemCount} {cart.itemCount === 1 ? 'producto' : 'productos'})
+            </span>
           </div>
         </div>
 
-        {/* Cart summary */}
-        <div className="lg:col-span-1">
-          <CartSummary
-            cart={cart}
-            onCheckout={handleCheckout}
-            showCheckoutButton={true}
-          />
+        {/* Cart content */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
+          {/* Cart items */}
+          <div className="lg:col-span-2 space-y-5">
+            {cart.items.map((item) => (
+              <CartItem
+                key={`${item.productId}-${item.variantId || 'no-variant'}`}
+                item={item}
+                onUpdateQuantity={(quantity) =>
+                  updateQuantity({
+                    productId: item.productId,
+                    variantId: item.variantId,
+                    quantity,
+                  })
+                }
+                onRemove={() =>
+                  removeItem({
+                    productId: item.productId,
+                    variantId: item.variantId,
+                  })
+                }
+              />
+            ))}
+          </div>
+
+          {/* Cart summary */}
+          <div className="lg:col-span-1">
+            <CartSummary
+              cart={cart}
+              onCheckout={handleCheckout}
+              showCheckoutButton={true}
+            />
+          </div>
         </div>
-      </div>
     </div>
   );
 }

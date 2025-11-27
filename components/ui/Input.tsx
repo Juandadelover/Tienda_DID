@@ -20,13 +20,13 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const generatedId = React.useId();
     const inputId = id || generatedId;
     
-    // Base input styles
-    const baseStyles = 'px-4 py-3 border rounded-lg text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:bg-gray-100 disabled:cursor-not-allowed min-h-[44px]';
+    // Base input styles - Responsive sizing with animation
+    const baseStyles = 'px-3 sm:px-4 py-3 border rounded-lg text-base transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-offset-1 hover:border-gray-400 disabled:bg-gray-100 disabled:cursor-not-allowed min-h-[44px]';
     
-    // Error state styles
+    // Error state styles - Enhanced with shake animation on error
     const errorStyles = error
-      ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-      : 'border-gray-300 focus:border-primary focus:ring-primary';
+      ? 'border-red-500 focus:border-red-500 focus:ring-red-500 animate-shake'
+      : 'border-gray-300 focus:border-[#047857] focus:ring-[#047857]';
     
     // Width styles
     const widthStyles = fullWidth ? 'w-full' : '';
@@ -95,7 +95,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ label, error, helperText, fullWidth = false, className = '', id, ...props }, ref) => {
     const textareaId = id || `textarea-${Math.random().toString(36).substr(2, 9)}`;
     
-    const baseStyles = 'px-4 py-3 border rounded-lg text-base transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:bg-gray-100 disabled:cursor-not-allowed min-h-[88px] resize-y';
+    const baseStyles = 'px-4 py-3 border rounded-lg text-base transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:bg-gray-100 disabled:cursor-not-allowed min-h-[88px] resize-y';
     
     const errorStyles = error
       ? 'border-red-500 focus:border-red-500 focus:ring-red-500'

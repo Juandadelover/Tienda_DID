@@ -70,14 +70,15 @@ export function Modal({
   
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
       onClick={handleOverlayClick}
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
     >
       <div
-        className={`bg-white rounded-lg shadow-xl w-full ${sizeStyles[size]} max-h-[90vh] overflow-hidden flex flex-col`}
+        className={`bg-white shadow-xl w-full h-full sm:h-auto ${sizeStyles[size]} sm:max-h-[90vh] overflow-hidden flex flex-col animate-scale-in rounded-none sm:rounded-lg`}
+        style={{ animationDuration: '300ms' }}
       >
         {/* Header */}
         {(title || showCloseButton) && (

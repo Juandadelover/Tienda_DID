@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useRef } from 'react';
+import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Spinner } from '@/components/ui/Spinner';
@@ -104,16 +105,18 @@ export function ImageUploader({ currentImageUrl, onUpload, onRemove }: ImageUplo
 
       {/* Preview or Upload Area */}
       {previewUrl ? (
-        <div className="relative">
-          <img
+        <div className="relative w-full max-w-xs h-48">
+          <Image
             src={previewUrl}
             alt="Preview"
-            className="w-full max-w-xs h-48 object-cover rounded-lg border border-slate-200"
+            fill
+            className="object-cover rounded-lg border border-slate-200"
+            sizes="(max-width: 768px) 100vw, 320px"
           />
           <button
             type="button"
             onClick={handleRemove}
-            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
+            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors z-10"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

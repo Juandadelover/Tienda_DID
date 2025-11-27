@@ -22,11 +22,12 @@ export function Spinner({ size = 'md', className = '', label = 'Cargando...' }: 
   return (
     <div className="flex flex-col items-center justify-center gap-2" role="status" aria-live="polite">
       <svg
-        className={`animate-spin text-primary ${sizeStyles[size]} ${className}`}
+        className={`motion-safe:animate-spin motion-reduce:animate-pulse text-primary ${sizeStyles[size]} ${className}`}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"
         aria-hidden="true"
+        style={{ willChange: 'transform' }}
       >
         <circle
           className="opacity-25"
