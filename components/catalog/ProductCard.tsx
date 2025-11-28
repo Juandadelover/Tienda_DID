@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import type { Product } from '@/types/product';
 import { formatCurrency } from '@/lib/utils/formatters';
-import { useCart } from '@/lib/hooks/useCart';
+import { useCartContext } from '@/context/CartContext';
 
 interface ProductCardProps {
   product: Product;
@@ -13,7 +13,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onClick, viewMode = 'grid' }: ProductCardProps) {
-  const { addItem } = useCart();
+  const { addItem } = useCartContext();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [showAddedFeedback, setShowAddedFeedback] = useState(false);
 

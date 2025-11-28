@@ -12,14 +12,14 @@ import { CheckoutForm, CheckoutFormData } from '@/components/checkout/CheckoutFo
 import { OrderSummary } from '@/components/checkout/OrderSummary';
 import { WhatsAppButton } from '@/components/checkout/WhatsAppButton';
 import { HorarioAlert } from '@/components/layout/HorarioAlert';
-import { useCart } from '@/lib/hooks/useCart';
+import { useCartContext } from '@/context/CartContext';
 import { useHorario } from '@/lib/hooks/useHorario';
 import { sendOrderToWhatsApp, WhatsAppOrderData } from '@/lib/utils/whatsapp';
 import { Spinner } from '@/components/ui/Spinner';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, clearCart, isLoading: cartLoading } = useCart();
+  const { cart, clearCart, isLoading: cartLoading } = useCartContext();
   const { items, total } = cart;
   const { isOpen } = useHorario();
 
