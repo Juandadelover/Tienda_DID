@@ -85,7 +85,7 @@ ${itemsText}
 🚚 *Entrega:* ${deliveryText}${addressLine}${notesLine}
 
 ---
-_Pedido realizado desde tiendadid.com_
+https://tienda-did.vercel.app/
   `.trim();
 
   return message;
