@@ -75,34 +75,64 @@ export default function AdminProductsPage() {
   }
 
   return (
-    <div>
-      {/* Page Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">Productos</h1>
-          <p className="text-slate-600 mt-1">
-            {products.length} producto{products.length !== 1 ? 's' : ''} en total
-          </p>
+    <div className="min-h-screen bg-slate-50">
+      {/* Enhanced Page Header */}
+      <div className="bg-white border-b border-slate-200 px-6 py-6">
+        <nav className="flex mb-4" aria-label="Breadcrumb">
+          <ol className="flex items-center space-x-2">
+            <li>
+              <a href="/admin" className="text-slate-500 hover:text-slate-700 transition-colors">
+                Admin
+              </a>
+            </li>
+            <li><span className="text-slate-400">/</span></li>
+            <li><span className="text-slate-900 font-medium">Productos</span></li>
+          </ol>
+        </nav>
+
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">
+              Gestión de Productos
+            </h1>
+            <p className="mt-2 text-slate-600 text-lg">
+              Administra el catálogo de productos de tu tienda
+            </p>
+          </div>
+
+          {/* Quick stats */}
+          <div className="flex gap-4">
+            <div className="bg-emerald-50 px-4 py-3 rounded-lg border border-emerald-100">
+              <div className="text-xl font-bold text-emerald-700">{products.length}</div>
+              <div className="text-xs text-emerald-600 font-medium">Total</div>
+            </div>
+            <div className="bg-green-50 px-4 py-3 rounded-lg border border-green-100">
+              <div className="text-xl font-bold text-green-700">
+                {products.filter(p => p.is_available).length}
+              </div>
+              <div className="text-xs text-green-600 font-medium">Disponibles</div>
+            </div>
+            <div className="bg-blue-50 px-4 py-3 rounded-lg border border-blue-100">
+              <div className="text-xl font-bold text-blue-700">
+                {products.filter(p => p.has_variants).length}
+              </div>
+              <div className="text-xs text-blue-600 font-medium">Con variantes</div>
+            </div>
+          </div>
         </div>
-        <Link href="/admin/productos/nuevo">
-          <Button className="flex items-center gap-2">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Agregar Producto
-          </Button>
-        </Link>
       </div>
 
-      {/* Error Message */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-          {error}
-        </div>
-      )}
+      <div className="p-6">
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+            {error}
+          </div>
+        )}
 
-      {/* Products Table */}
-      <ProductTable products={products} onRefresh={fetchProducts} />
+        {/* Products Table */}
+        <ProductTable products={products} onRefresh={fetchProducts} />
+      </div>
     </div>
   );
 }

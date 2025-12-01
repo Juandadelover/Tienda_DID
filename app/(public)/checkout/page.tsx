@@ -92,17 +92,22 @@ export default function CheckoutPage() {
     <div className="bg-slate-50 min-h-screen py-8 md:py-10">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
-        <div className="mb-6 text-center">
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-1">
-            Finalizar Compra
-          </h1>
-          <p className="text-sm text-slate-500">
-            Completa tus datos para enviar tu pedido
+        <div className="mb-8 text-center">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <svg className="w-8 h-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            <h1 className="text-3xl md:text-4xl font-bold text-slate-900">
+              Finalizar Compra
+            </h1>
+          </div>
+          <p className="text-base text-slate-600 max-w-md mx-auto">
+            Ingresa tus datos de entrega para completar tu pedido
           </p>
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-12 gap-6 items-start">
+        <div className="grid lg:grid-cols-12 gap-8 items-start">
           {/* Left Column: Form */}
           <div className="lg:col-span-7 space-y-4">
             <div className="bg-white rounded-xl border border-slate-200 p-5 md:p-6">
@@ -114,17 +119,6 @@ export default function CheckoutPage() {
                 onSubmit={handleFormSubmit}
                 isLoading={isSending}
               />
-            </div>
-
-            {/* Additional Info */}
-            <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
-              <h3 className="text-sm font-semibold text-blue-900 mb-2">¿Cómo funciona?</h3>
-              <ol className="text-xs text-blue-800 space-y-1.5">
-                <li>1. Completa el formulario con tus datos</li>
-                <li>2. Haz clic en &quot;Enviar pedido por WhatsApp&quot;</li>
-                <li>3. Se abrirá WhatsApp con tu pedido pre-cargado</li>
-                <li>4. Confirma y envía el mensaje</li>
-              </ol>
             </div>
           </div>
 
@@ -138,29 +132,7 @@ export default function CheckoutPage() {
             />
 
             {/* WhatsApp Send Button */}
-            <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-4">
-              {/* Step Indicator */}
-              {!formData && (
-                <div className="flex items-center gap-3 p-3 bg-amber-50 text-amber-800 rounded-lg border border-amber-200">
-                  <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <p className="text-sm font-medium">Primero completa el formulario y haz clic en &quot;Confirmar datos&quot;</p>
-                </div>
-              )}
-
-              {formData && (
-                <div className="flex items-center gap-3 p-3 bg-emerald-50 text-emerald-800 rounded-lg border border-emerald-200">
-                  <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <div>
-                    <p className="text-sm font-medium">¡Datos confirmados!</p>
-                    <p className="text-xs opacity-80">{formData.customerName} - {formData.deliveryType === 'delivery' ? 'Domicilio' : 'Recoger en tienda'}</p>
-                  </div>
-                </div>
-              )}
-
+            <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
               <WhatsAppButton
                 onClick={handleWhatsAppSend}
                 disabled={!formData || isSending || items.length === 0}

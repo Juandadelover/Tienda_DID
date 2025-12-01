@@ -65,12 +65,15 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-slate-100">
+    <div className="min-h-screen bg-slate-100 flex">
       {/* Sidebar - includes mobile header and menu */}
       <AdminNav />
 
-      {/* Main Content - pt-20 accounts for fixed mobile header (h-16 + spacing) */}
-      <main className="pt-20 md:pt-0 md:ml-72 min-h-screen">
+      {/* Desktop Sidebar Spacer - pushes content to the right */}
+      <div className="hidden md:block w-16 shrink-0 transition-all duration-300" />
+
+      {/* Main Content */}
+      <main className="flex-1 pt-14 md:pt-0 min-h-screen transition-all duration-300 w-full">
         {children}
       </main>
     </div>
