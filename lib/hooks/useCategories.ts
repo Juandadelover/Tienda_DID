@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import type { Category } from '@/types/category';
 
 interface UseCategoriesReturn {
@@ -10,40 +10,31 @@ interface UseCategoriesReturn {
   refetch: () => void;
 }
 
+// Fetcher para categorías
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Error al cargar categorías');
+  return res.json();
+};
+
 export function useCategories(): UseCategoriesReturn {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchCategories = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch('/api/categories');
-
-      if (!response.ok) {
-        throw new Error('Error al cargar categorías');
-      }
-
-      const data = await response.json();
-      setCategories(data.categories || []);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido');
-      setCategories([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchCategories();
-  }, []);
+  const { data, error, isLoading, mutate } = useSWR('/api/categories', fetcher, {
+    // Las categorías cambian poco - caché de 5 minutos
+    dedupingInterval: 300000,
+    // No revalidar al enfocar (datos estables)
+    revalidateOnFocus: false,
+    // Mantener datos previos mientras carga
+    keepPreviousData: true,
+    // Reintentar 2 veces en caso de error
+    errorRetryCount: 2,
+    // No refrescar automáticamente
+    refreshInterval: 0,
+  });
 
   return {
-    categories,
-    loading,
-    error,
-    refetch: fetchCategories,
+    categories: data?.categories || [],
+    loading: isLoading,
+    error: error?.message || null,
+    refetch: () => mutate(),
   };
 }

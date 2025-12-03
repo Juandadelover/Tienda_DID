@@ -47,7 +47,15 @@ export async function GET(request: NextRequest) {
       created_at: category.created_at,
     })) || [];
 
-    return NextResponse.json({ categories });
+    // Añadir headers de caché - 5 minutos, revalidar en background por 30 min
+    return NextResponse.json(
+      { categories },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=1800',
+        },
+      }
+    );
   } catch (error) {
     console.error('Unexpected error:', error);
     return NextResponse.json(

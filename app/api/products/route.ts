@@ -7,12 +7,38 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
     // Get query parameters
-    const category = searchParams.get('category');
+    const categorySlug = searchParams.get('category');
     const availableParam = searchParams.get('available');
     const search = searchParams.get('search');
 
     // Default to showing only available products
     const available = availableParam === 'false' ? false : true;
+
+    let categoryId: string | null = null;
+
+    // Si se proporciona un slug de categoría, obtener su ID
+    if (categorySlug) {
+      const { data: categoryData, error: categoryError } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('slug', categorySlug)
+        .single();
+
+      if (categoryError || !categoryData) {
+        console.warn(`Category not found: ${categorySlug}`);
+        // Retornar array vacío si la categoría no existe
+        return NextResponse.json(
+          { products: [] },
+          {
+            headers: {
+              'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+            },
+          }
+        );
+      }
+
+      categoryId = categoryData.id;
+    }
 
     // Build query
     let query = supabase
@@ -43,12 +69,13 @@ export async function GET(request: NextRequest) {
       .order('name', { ascending: true });
 
     // Apply filters
-    if (available !== null) {
-      query = query.eq('is_available', available);
+    if (available) {
+      query = query.eq('is_available', true);
     }
 
-    if (category) {
-      query = query.eq('categories.slug', category);
+    // Filtrar por category_id en lugar de por relación anidada
+    if (categoryId) {
+      query = query.eq('category_id', categoryId);
     }
 
     if (search) {
@@ -88,7 +115,15 @@ export async function GET(request: NextRequest) {
       updated_at: product.updated_at,
     })) || [];
 
-    return NextResponse.json({ products });
+    // Añadir headers de caché - 60 segundos de caché, revalidar en background
+    return NextResponse.json(
+      { products },
+      {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        },
+      }
+    );
   } catch (error) {
     console.error('Unexpected error:', error);
     return NextResponse.json(

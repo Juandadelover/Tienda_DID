@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { Sparkles, TrendingUp, Grid3x3, List, Search, X } from 'lucide-react';
 import { useProducts } from '@/lib/hooks/useProducts';
@@ -31,21 +31,22 @@ export default function Home() {
 
   // Fetch categories and products
   const { categories, loading: categoriesLoading } = useCategories();
-  const { products, loading: productsLoading } = useProducts({
+  const { products, loading: productsLoading, error: productsError } = useProducts({
     category: selectedCategory || undefined,
     available: true,
   });
 
-  // Filter and sort products
+  // Filter and sort products (solo búsqueda en frontend, el filtro de categoría ya viene de la API)
   const filteredAndSortedProducts = useMemo(() => {
     let filtered = products;
 
-    // Filter by search
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
+    // Filter by search (solo si hay búsqueda)
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
       filtered = filtered.filter(p =>
         p.name.toLowerCase().includes(query) ||
-        (p.description && p.description.toLowerCase().includes(query))
+        (p.description && p.description.toLowerCase().includes(query)) ||
+        (p.category_name && p.category_name.toLowerCase().includes(query))
       );
     }
 
@@ -66,17 +67,59 @@ export default function Home() {
     return sorted;
   }, [products, searchQuery, sortBy]);
 
-  const handleProductClick = (product: Product) => {
+  const handleCategoryChange = useCallback((categorySlug: string | null) => {
+    setSelectedCategory(categorySlug);
+    // Limpiar búsqueda cuando cambiamos de categoría para evitar confusión
+    if (categorySlug && searchQuery) {
+      setSearchQuery('');
+    }
+  }, [searchQuery]);
+
+  const handleSearchChange = useCallback((query: string) => {
+    setSearchQuery(query);
+    // Si hay una categoría seleccionada y el usuario busca, podría ser confuso
+    // pero permitimos la combinación para flexibilidad
+  }, []);
+
+  const clearAllFilters = useCallback(() => {
+    setSelectedCategory(null);
+    setSearchQuery('');
+  }, []);
+
+  const handleProductClick = useCallback((product: Product) => {
     setSelectedProduct(product);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const handleModalClose = () => {
+  const handleModalClose = useCallback(() => {
     setIsModalOpen(false);
     setSelectedProduct(null);
-  };
+  }, []);
 
   const isLoading = categoriesLoading || productsLoading;
+
+  // Mostrar error si hay problemas con la carga de productos
+  if (productsError && !isLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-red-100 rounded-full mb-4">
+            <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          <h2 className="text-lg font-semibold text-slate-900 mb-2">Error al cargar productos</h2>
+          <p className="text-sm text-slate-500 mb-4">{productsError}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-emerald-600 text-white text-sm rounded-lg hover:bg-emerald-700 transition-colors font-medium"
+          >
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -112,19 +155,21 @@ export default function Home() {
             {/* Stats */}
             <div className="flex justify-center gap-8 pt-3">
               <div className="text-center">
-                <div className="text-xl md:text-2xl font-bold">{products.length}+</div>
-                <div className="text-xs text-emerald-200">Productos</div>
+                <div className="text-xl md:text-2xl font-bold">{filteredAndSortedProducts.length}</div>
+                <div className="text-xs text-emerald-200">
+                  {selectedCategory ? `en ${categories.find(c => c.slug === selectedCategory)?.name}` : 'productos'}
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-xl md:text-2xl font-bold">{categories.length}</div>
-                <div className="text-xs text-emerald-200">Categorías</div>
+                <div className="text-xl md:text-2xl font-bold">{categories.filter(c => (c.product_count ?? 0) > 0).length}</div>
+                <div className="text-xs text-emerald-200">categorías</div>
               </div>
               <div className="text-center">
                 <div className="text-xl md:text-2xl font-bold flex items-center gap-1">
                   <TrendingUp className="w-4 h-4" />
                   100%
                 </div>
-                <div className="text-xs text-emerald-200">Satisfacción</div>
+                <div className="text-xs text-emerald-200">disponible</div>
               </div>
             </div>
           </div>
@@ -147,7 +192,7 @@ export default function Home() {
             <input
               type="text"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               placeholder="Buscar productos..."
               className="w-full pl-16 pr-12 py-4 text-base border-2 border-slate-100 rounded-2xl focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all duration-300 bg-white shadow-sm hover:shadow-md hover:border-emerald-200 placeholder:text-slate-400"
             />
@@ -164,28 +209,45 @@ export default function Home() {
 
         {/* Category Filter */}
         <div className="mb-10">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+            <h2 className="text-lg font-semibold text-slate-900">Filtrar por categoría</h2>
+            {(selectedCategory || searchQuery) && (
+              <button
+                onClick={clearAllFilters}
+                className="px-3 py-1.5 text-sm bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-colors flex items-center gap-1.5"
+              >
+                <X className="w-3.5 h-3.5" />
+                Limpiar filtros
+              </button>
+            )}
+          </div>
+
           <div className="flex flex-wrap justify-center gap-2">
             <button
-              onClick={() => setSelectedCategory(null)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selectedCategory === null
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600'
-                }`}
-            >
-              Todos
-            </button>
-            {categories.map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.slug)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${selectedCategory === cat.slug
+              onClick={() => handleCategoryChange(null)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                selectedCategory === null
                   ? 'bg-emerald-600 text-white shadow-sm'
                   : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600'
+              }`}
+            >
+              Todos ({products.length})
+            </button>
+            {categories
+              .filter(cat => (cat.product_count ?? 0) > 0) // Solo mostrar categorías con productos
+              .map(cat => (
+                <button
+                  key={cat.id}
+                  onClick={() => handleCategoryChange(cat.slug)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    selectedCategory === cat.slug
+                      ? 'bg-emerald-600 text-white shadow-sm'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:border-emerald-300 hover:text-emerald-600'
                   }`}
-              >
-                {cat.name}
-              </button>
-            ))}
+                >
+                  {cat.name} ({cat.product_count})
+                </button>
+              ))}
           </div>
         </div>
 
@@ -193,7 +255,12 @@ export default function Home() {
         {isLoading ? (
           <div className="flex flex-col items-center justify-center py-16">
             <Spinner />
-            <p className="mt-3 text-sm text-slate-500">Cargando productos...</p>
+            <p className="mt-3 text-sm text-slate-500">
+              {selectedCategory
+                ? `Cargando productos de ${categories.find(c => c.slug === selectedCategory)?.name}...`
+                : 'Cargando productos...'
+              }
+            </p>
           </div>
         ) : (
           <>
@@ -203,19 +270,29 @@ export default function Home() {
                 <span className="text-sm text-slate-600">
                   <span className="font-semibold text-emerald-600">{filteredAndSortedProducts.length}</span>
                   {' '}{filteredAndSortedProducts.length === 1 ? 'producto' : 'productos'}
+                  {selectedCategory && (
+                    <span className="ml-1">
+                      en <span className="font-medium text-emerald-600">
+                        {categories.find(c => c.slug === selectedCategory)?.name}
+                      </span>
+                    </span>
+                  )}
                 </span>
 
-                {selectedCategory && (
-                  <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-50 text-emerald-700 rounded-md text-xs font-medium">
-                    {categories.find(c => c.slug === selectedCategory)?.name}
-                  </span>
-                )}
+                {/* Filtros activos */}
+                <div className="flex items-center gap-2">
+                  {selectedCategory && (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-50 text-emerald-700 rounded-md text-xs font-medium">
+                      Categoría: {categories.find(c => c.slug === selectedCategory)?.name}
+                    </span>
+                  )}
 
-                {searchQuery && (
-                  <span className="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 text-slate-600 rounded-md text-xs">
-                    &quot;{searchQuery}&quot;
-                  </span>
-                )}
+                  {searchQuery && (
+                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-slate-100 text-slate-600 rounded-md text-xs">
+                      Búsqueda: "{searchQuery}"
+                    </span>
+                  )}
+                </div>
               </div>
 
               <div className="flex items-center gap-3">
@@ -267,10 +344,7 @@ export default function Home() {
                 </p>
                 {(selectedCategory || searchQuery) && (
                   <button
-                    onClick={() => {
-                      setSelectedCategory(null);
-                      setSearchQuery('');
-                    }}
+                    onClick={clearAllFilters}
                     className="px-4 py-2 bg-emerald-600 text-white text-sm rounded-lg hover:bg-emerald-700 transition-colors font-medium"
                   >
                     Limpiar filtros

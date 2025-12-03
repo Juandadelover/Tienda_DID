@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
+import { SWRProvider } from "@/lib/providers/SWRProvider";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -43,7 +44,9 @@ export default function RootLayout({
         >
           Saltar al contenido principal
         </a>
-        {children}
+        <SWRProvider>
+          {children}
+        </SWRProvider>
       </body>
     </html>
   );

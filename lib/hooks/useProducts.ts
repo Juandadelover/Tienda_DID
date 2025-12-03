@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import useSWR from 'swr';
 import type { Product } from '@/types/product';
 
 interface UseProductsOptions {
@@ -16,50 +16,41 @@ interface UseProductsReturn {
   refetch: () => void;
 }
 
+// Fetcher global para SWR
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Error al cargar productos');
+  return res.json();
+};
+
 export function useProducts(options: UseProductsOptions = {}): UseProductsReturn {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // Crear una clave única para SWR que incluya todos los parámetros de filtro
+  const cacheKey = `/api/products?${new URLSearchParams({
+    ...(options.category && { category: options.category }),
+    ...(options.available !== undefined && { available: String(options.available) }),
+    ...(options.search && { search: options.search }),
+  }).toString()}`;
 
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      // Build query string
-      const params = new URLSearchParams();
-      if (options.category) params.append('category', options.category);
-      if (options.available !== undefined) params.append('available', String(options.available));
-      if (options.search) params.append('search', options.search);
-
-      const queryString = params.toString();
-      const url = `/api/products${queryString ? `?${queryString}` : ''}`;
-
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error('Error al cargar productos');
-      }
-
-      const data = await response.json();
-      setProducts(data.products || []);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido');
-      setProducts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProducts();
-  }, [options.category, options.available, options.search]);
+  const { data, error, isLoading, mutate } = useSWR(cacheKey, fetcher, {
+    // Mantener datos en caché por 60 segundos
+    dedupingInterval: 60000,
+    // Revalidar al volver a enfocar la ventana
+    revalidateOnFocus: false,
+    // Mantener datos previos mientras carga nuevos
+    keepPreviousData: true,
+    // Reintentar en caso de error
+    errorRetryCount: 2,
+    // Caché persistente - no revalidar automáticamente tan seguido
+    refreshInterval: 0,
+    // Forzar revalidación cuando cambian los parámetros
+    revalidateIfStale: true,
+  });
 
   return {
-    products,
-    loading,
-    error,
-    refetch: fetchProducts,
+    products: data?.products || [],
+    loading: isLoading,
+    error: error?.message || null,
+    refetch: () => mutate(),
   };
 }
 
@@ -70,49 +61,30 @@ interface UseProductReturn {
   refetch: () => void;
 }
 
+// Fetcher para producto individual
+const productFetcher = async (url: string) => {
+  const res = await fetch(url);
+  if (res.status === 404) throw new Error('Producto no encontrado');
+  if (!res.ok) throw new Error('Error al cargar producto');
+  return res.json();
+};
+
 export function useProduct(id: string): UseProductReturn {
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const fetchProduct = async () => {
-    if (!id) {
-      setProduct(null);
-      setLoading(false);
-      return;
+  const { data, error, isLoading, mutate } = useSWR(
+    id ? `/api/products/${id}` : null,
+    productFetcher,
+    {
+      dedupingInterval: 60000,
+      revalidateOnFocus: false,
+      keepPreviousData: true,
+      errorRetryCount: 2,
     }
-
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch(`/api/products/${id}`);
-
-      if (!response.ok) {
-        if (response.status === 404) {
-          throw new Error('Producto no encontrado');
-        }
-        throw new Error('Error al cargar producto');
-      }
-
-      const data = await response.json();
-      setProduct(data.product);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error desconocido');
-      setProduct(null);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchProduct();
-  }, [id]);
+  );
 
   return {
-    product,
-    loading,
-    error,
-    refetch: fetchProduct,
+    product: data?.product || null,
+    loading: isLoading,
+    error: error?.message || null,
+    refetch: () => mutate(),
   };
 }
