@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Spinner } from '@/components/ui/Spinner';
 import { ProductTable } from '@/components/admin/ProductTable';
+import { Plus } from 'lucide-react';
 
 interface Variant {
   id: string;
@@ -77,8 +78,9 @@ export default function AdminProductsPage() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Enhanced Page Header */}
-      <div className="bg-white border-b border-slate-200 px-6 py-6">
-        <nav className="flex mb-4" aria-label="Breadcrumb">
+      <div className="bg-white border-b border-slate-200 px-4 sm:px-6 py-4 sm:py-6">
+        {/* Breadcrumb - Hidden on very small screens */}
+        <nav className="hidden sm:flex mb-4" aria-label="Breadcrumb">
           <ol className="flex items-center space-x-2">
             <li>
               <a href="/admin" className="text-slate-500 hover:text-slate-700 transition-colors">
@@ -90,39 +92,49 @@ export default function AdminProductsPage() {
           </ol>
         </nav>
 
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">
+        {/* Mobile: Stack layout / Desktop: Side by side */}
+        <div className="space-y-3 sm:space-y-0 sm:flex sm:items-start sm:justify-between sm:gap-4">
+          {/* Title Section */}
+          <div className="flex-1">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-slate-900">
               Gestión de Productos
             </h1>
-            <p className="mt-2 text-slate-600 text-lg">
+            <p className="mt-1 text-sm sm:text-base text-slate-600">
               Administra el catálogo de productos de tu tienda
             </p>
           </div>
+          
+          {/* Add Product Button */}
+          <Link href="/admin/productos/nuevo" className="block sm:shrink-0">
+            <Button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 sm:py-3 px-4 sm:px-5 rounded-lg sm:rounded-xl shadow-md hover:shadow-lg transition-all text-sm sm:text-base">
+              <Plus className="w-5 h-5" />
+              Agregar Producto
+            </Button>
+          </Link>
+        </div>
 
-          {/* Quick stats */}
-          <div className="flex gap-4">
-            <div className="bg-emerald-50 px-4 py-3 rounded-lg border border-emerald-100">
-              <div className="text-xl font-bold text-emerald-700">{products.length}</div>
-              <div className="text-xs text-emerald-600 font-medium">Total</div>
+        {/* Quick stats */}
+        <div className="flex gap-2 sm:gap-4 mt-4 overflow-x-auto pb-1 -mx-1 px-1">
+          <div className="bg-emerald-50 px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-emerald-100 shrink-0">
+            <div className="text-lg sm:text-xl font-bold text-emerald-700">{products.length}</div>
+            <div className="text-xs text-emerald-600 font-medium">Total</div>
+          </div>
+          <div className="bg-green-50 px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-green-100 shrink-0">
+            <div className="text-lg sm:text-xl font-bold text-green-700">
+              {products.filter(p => p.is_available).length}
             </div>
-            <div className="bg-green-50 px-4 py-3 rounded-lg border border-green-100">
-              <div className="text-xl font-bold text-green-700">
-                {products.filter(p => p.is_available).length}
-              </div>
-              <div className="text-xs text-green-600 font-medium">Disponibles</div>
+            <div className="text-xs text-green-600 font-medium">Disponibles</div>
+          </div>
+          <div className="bg-blue-50 px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-blue-100 shrink-0">
+            <div className="text-lg sm:text-xl font-bold text-blue-700">
+              {products.filter(p => p.has_variants).length}
             </div>
-            <div className="bg-blue-50 px-4 py-3 rounded-lg border border-blue-100">
-              <div className="text-xl font-bold text-blue-700">
-                {products.filter(p => p.has_variants).length}
-              </div>
-              <div className="text-xs text-blue-600 font-medium">Con variantes</div>
-            </div>
+            <div className="text-xs text-blue-600 font-medium">Con variantes</div>
           </div>
         </div>
       </div>
 
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         {/* Error Message */}
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">

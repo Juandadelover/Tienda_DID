@@ -73,7 +73,7 @@ export default function AdminLayout({
       <div className="hidden md:block w-16 shrink-0 transition-all duration-300" />
 
       {/* Main Content */}
-      <main className="flex-1 pt-14 md:pt-0 min-h-screen transition-all duration-300 w-full">
+      <main className="flex-1 pt-[72px] md:pt-0 min-h-screen transition-all duration-300 w-full">
         {children}
       </main>
     </div>
