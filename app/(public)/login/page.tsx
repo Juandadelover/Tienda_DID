@@ -76,7 +76,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md relative z-10 px-4">
         {/* Logo/Brand */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-lg mb-6 transform rotate-3 hover:rotate-6 transition-transform duration-300">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl shadow-lg mb-6">
             <span className="text-3xl font-bold text-white">TD</span>
           </div>
           <h1 className="text-3xl font-bold text-slate-900 mb-2 tracking-tight">
